@@ -1,4 +1,4 @@
-#include <string.h>
+#include "libft.h"
 
 char *ft_strchr(const char *str, int c)
 {
@@ -19,3 +19,7 @@ char *ft_strchr(const char *str, int c)
     }
     return (NULL);
 }
+
+/* La función ft_strchr se utiliza para localizar la primera 
+ocurrencia de un carácter específico 
+dentro de una cadena de caracteres.*/
