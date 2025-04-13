@@ -32,34 +32,33 @@ char **ft_split(char const *s, char c)
 {
 	size_t i;
 	size_t j;
-	size_t k;
-	size_t s_len; 
+	size_t start;
+	size_t substr_len; 
 	char **matrix;
 	
 	if (s == NULL)
 		return (NULL);
-	i = 0;
-	s_len = ft_strlen(s);
 	matrix = (char **)malloc((substr_counter(s, c) + 1) * sizeof(char *));
-	*matrix = (char *)malloc((s_len + substr_counter(s, c))) * sizeof(char);
 	if (matrix == NULL)
 		return (NULL);
+	i = 0;
 	j = 0;
-	k = 0;
 	while (s[i])
 	{
-		if (s[i] != c)
+		while (s[i] == c)
+			i++;
+		if (s[i] != c && s[i] != '\0')
 		{
-			matrix[j][k] = s[i];
+			substr_len = 0;
+			start = i;
+			while (s[i + substr_len] != c)
+				substr_len++;
+			i = i + substr_len;
+			matrix[j] = malloc((substr_len + 1) * sizeof(char));	
 		}
-		i++;
-		k++;
-		if (s[i] == c)
-		{
-			matrix[j][k] = '\0';
-			j++;
-			k = 0;
-		}
+		ft_strlcpy(matrix[j], &s[start], substr_len + 1);
+		j++;
 	}
+	matrix[j] = NULL;
 	return (matrix);
 }
