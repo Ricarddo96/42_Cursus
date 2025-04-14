@@ -1,14 +1,14 @@
 #include "libft.h"
+/*
+void *ft_memmove(void *dest, const void *src, size_t n)
+{
+    size_t i;
+    dest = ft_strdup();
 
-// void *ft_memmove(void *dest, const void *src, size_t n)
-// {
-//     size_t i;
-//     dest = ft_strdup();
 
-
-//     return (dest);
-// }
-
+    return (dest);
+}*/
+ 
 void *ft_memmove(void *dest, const void *src, size_t n)
 {
     size_t i;
@@ -17,7 +17,9 @@ void *ft_memmove(void *dest, const void *src, size_t n)
     char *ptr_dest;
 
     i = 0;
-    ptr_src = (const char *)src;
+    if ((!dest || !src) && n == 0)
+        return (dest);
+    ptr_src = (char *)src;
     ptr_dest = (char *)dest;
     while(i < n)
     {

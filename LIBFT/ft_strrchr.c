@@ -1,10 +1,9 @@
 #include "libft.h"
 
-char *ft_strrchr(const char *str, int c)
+const char *ft_strrchr(const char *str, int c)
 {
     int i;
-    char primer_char;
-
+    
     i = 0;
     while (str[i])
         i++;
