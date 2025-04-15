@@ -20,6 +20,4 @@ void ft_putnbr_fd(int n, int fd)
 	}
 	resultado = (n % 10) + '0';
 	write(fd, &resultado, 1);
-	if (write(fd, &resultado, 1) == -1)
-		return;
 }
