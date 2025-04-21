@@ -1,41 +1,61 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_itoa.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ridoming <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/18 14:26:21 by ridoming          #+#    #+#             */
+/*   Updated: 2025/04/18 14:30:54 by ridoming         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "libft.h"
 
-char *ft_itoa(int n)
+static void	fill_str(long long l, int sign, int d, char *s)
 {
-	size_t contador;
-	int n_copy;
-	int i;
-	char *str;
-
-	n_copy = n;
-	contador = 0;
-	if (n == 0)
-		contador = 1;
+	s[d + sign] = '\0';
+	if (l == 0)
+	{
+		s[0] = '0';
+	}
 	else
 	{
-		if (n_copy < 0)
-			contador++;
-		while (n_copy / 10 != 0)
-			contador++;
-		contador++;
+		while (d > 0)
+		{
+			s[d + sign - 1] = (l % 10) + '0';
+			l /= 10;
+			d--;
+		}
+		if (sign)
+			s[0] = '-';
 	}
-	str = malloc((contador + 1) * sizeof(char));
-	i = (int)contador;
-	str[i] = '\0';
-	i--;
-	if (n < 0)
-		str[0] = '-';
-	while (i >= 0)
+}
+
+char	*ft_itoa(int n)
+{
+	long long	n_long;
+	int			sign;
+	int			digits;
+	long long	temp;
+	char		*str;
+
+	n_long = n;
+	digits = 1;
+	sign = (n_long < 0);
+	if (sign)
 	{
-		str[i] =  n % 10 + '0';
-		n = n / 10;
-		i--;
+		n_long = -n_long;
 	}
+	temp = n_long;
+	while (temp >= 10)
+	{
+		temp /= 10;
+		digits++;
+	}
+	str = malloc(digits + sign + 1);
+	if (!str)
+		return (NULL);
+	fill_str(n_long, sign, digits, str);
 	return (str);
 }
-/*
-SACAR EL CONTADOR PARA TENER MENOS DE 25 LIN
-castar a long
-variable para guardar n como long por si el numero mas grannde o el minimo
-
-*/

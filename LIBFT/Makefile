@@ -22,6 +22,8 @@ $(NAME): $(OBJS)
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+bonus: all
+
 clean:
 	rm -f $(OBJS)
 

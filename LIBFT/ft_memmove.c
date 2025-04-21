@@ -1,27 +1,37 @@
-#include "libft.h"
- 
-void    *ft_memmove(void *dest, const void *src, size_t n)
-{
-    size_t i;
-    char temp_array[n];
-    char *ptr_src;
-    char *ptr_dest;
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_memmove.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ridoming <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/04/18 17:12:26 by ridoming          #+#    #+#             */
+/*   Updated: 2025/04/18 17:13:50 by ridoming         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-    i = 0;
-    if ((!dest || !src) && n == 0)
-        return (dest);
-    ptr_src = (char *)src;
-    ptr_dest = (char *)dest;
-    while(i < n)
-    {
-        temp_array[i] = ptr_src[i];
-        i++;
-    }
-    i = 0;
-    while(i < n)
-    {
-        ptr_dest[i] = temp_array[i];
-        i++;
-    }
-    return (dest);
+#include "libft.h"
+
+void	*ft_memmove(void *dest, const void *src, size_t n)
+{
+	char	*ptr_src;
+	char	*ptr_dest;
+
+	if ((!dest && !src) || (dest == src))
+		return (dest);
+	ptr_src = (char *)src;
+	ptr_dest = (char *)dest;
+	if (src < dest)
+	{
+		ptr_dest = ptr_dest + n;
+		ptr_src = ptr_src + n;
+		while (n--)
+			*--ptr_dest = *--ptr_src;
+	}
+	else
+	{
+		while (n--)
+			*ptr_dest++ = *ptr_src++;
+	}
+	return (dest);
 }
