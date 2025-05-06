@@ -1,16 +1,27 @@
 #include "get_next_line.h"
 
 
-size_t	ft_strlen(const char *str)
+size_t	ft_strlen(const char *str, int modifier)
 {
 	int	longitud;
 
 	longitud = 0;
-	while (*str != '\0')
+	if (modifier == 1)
 	{
-		longitud++;
-		str++;
+		while (*str != '\0')
+		{
+			longitud++;
+			str++;
+		}
 	}
+	else if (modifier == 2)
+	{
+		while (*str != '\n' && *str != '\0')
+		{
+			longitud++;
+			str++;
+		}
+	}	
 	return (longitud);
 }
 
@@ -21,7 +32,7 @@ char	*ft_strdup(const char *s)
 	char	*new_string;
 
 	i = 0;
-	s_len = ft_strlen(s);
+	s_len = ft_strlen(s, 1);
 	new_string = (char *)malloc(s_len + 1);
 	if (new_string == NULL)
 		return (NULL);
@@ -42,7 +53,7 @@ char	*ft_substr(char const *s, unsigned int start, size_t len)
 
 	if (!s)
 		return (NULL);
-	s_len = ft_strlen(s);
+	s_len = ft_strlen(s, 1);
 	if (start >= s_len)
 		return (ft_strdup(""));
 	if (s_len - start < len)
@@ -68,8 +79,8 @@ size_t	ft_strlcat(char *dest, const char *src, size_t size)
 	size_t	src_long;
 
 	i = 0;
-	dest_long = ft_strlen(dest);
-	src_long = ft_strlen(src);
+	dest_long = ft_strlen(dest, 1);
+	src_long = ft_strlen(src, 1);
 	dest_long_copy = dest_long;
 	if (size <= dest_long)
 		return (size + src_long);
@@ -113,17 +124,19 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 	return (src_long);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	size_t	s1_len;
 	size_t	s2_len;
 	size_t	total_len;
 	char	*new_str;
 
-	if (!s1 || !s2)
-		return (NULL);
-	s1_len = ft_strlen(s1);
-	s2_len = ft_strlen(s2);
+	if (!s1)
+		return (new_str = ft_strdup(s2));
+	if (!s2)
+		return (new_str = ft_strdup(s1));
+	s1_len = ft_strlen(s1, 1);
+	s2_len = ft_strlen(s2, 1);
 	total_len = s1_len + s2_len;
 	new_str = malloc((s1_len + s2_len + 1) * sizeof(char));
 	if (new_str == NULL)
@@ -131,5 +144,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	ft_strlcpy(new_str, s1, total_len + 1);
 	ft_strlcat(new_str, s2, total_len + 1);
 	*(new_str + total_len) = '\0';
+	/* free(s1);
+	free(s2); */
 	return (new_str);
 }
