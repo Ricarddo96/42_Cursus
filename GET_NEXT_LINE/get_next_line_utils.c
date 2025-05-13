@@ -1,11 +1,24 @@
-#include "get_next_line.h"
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   get_next_line_utils.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/05/07 16:19:49 by ridoming          #+#    #+#             */
+/*   Updated: 2025/05/09 15:16:43 by ridoming         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
+#include "get_next_line.h"
 
 size_t	ft_strlen(const char *str, int modifier)
 {
 	int	longitud;
 
 	longitud = 0;
+	if (str == NULL)
+		return (0);
 	if (modifier == 1)
 	{
 		while (*str != '\0')
@@ -21,7 +34,7 @@ size_t	ft_strlen(const char *str, int modifier)
 			longitud++;
 			str++;
 		}
-	}	
+	}
 	return (longitud);
 }
 
@@ -122,29 +135,4 @@ size_t	ft_strlcpy(char *dest, const char *src, size_t size)
 		dest[i] = '\0';
 	}
 	return (src_long);
-}
-
-char	*ft_strjoin(char *s1, char *s2)
-{
-	size_t	s1_len;
-	size_t	s2_len;
-	size_t	total_len;
-	char	*new_str;
-
-	if (!s1)
-		return (new_str = ft_strdup(s2));
-	if (!s2)
-		return (new_str = ft_strdup(s1));
-	s1_len = ft_strlen(s1, 1);
-	s2_len = ft_strlen(s2, 1);
-	total_len = s1_len + s2_len;
-	new_str = malloc((s1_len + s2_len + 1) * sizeof(char));
-	if (new_str == NULL)
-		return (NULL);
-	ft_strlcpy(new_str, s1, total_len + 1);
-	ft_strlcat(new_str, s2, total_len + 1);
-	*(new_str + total_len) = '\0';
-	/* free(s1);
-	free(s2); */
-	return (new_str);
 }
