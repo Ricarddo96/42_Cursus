@@ -7,9 +7,9 @@
 #include <fcntl.h>
 #include <string.h>
 #include <sys/wait.h> 
+#include "./libft/libft.h"
 
-int	ft_strncmp(const char *s1, const char *s2, size_t n);
-int	ft_strlen(const char *str);
+
 char *obtain_uncut_path(char **env);
 
 #endif
