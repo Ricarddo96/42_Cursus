@@ -11,5 +11,7 @@
 
 
 char *obtain_uncut_path(char **env);
-
+char **obtain_path(char **env);
+void	free_matrix(char **matrix);
+void open_files(int *infile, int *outfile, char **argv);
 #endif

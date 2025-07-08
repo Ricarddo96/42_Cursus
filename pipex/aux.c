@@ -1,5 +1,21 @@
 #include "pipex.h"
 
+void	free_matrix(char **matrix)
+{
+	int	i;
+
+	if (matrix)
+	{
+		i = 0;
+		while (matrix[i] != NULL)
+		{
+			free(matrix[i]);
+			i++;
+		}
+		free(matrix);
+	}
+}
+
 char *obtain_uncut_path(char **env)
 {
     int i;
@@ -27,4 +43,30 @@ char *obtain_uncut_path(char **env)
         path[k++] = env[i][j++]; 
     path[k] = '\0';
     return (path);
+}
+char **obtain_path(char **env)
+{
+	char *uncut_path;
+	char **path;
+
+	uncut_path = obtain_uncut_path(env);
+	path = ft_split(uncut_path, ':');
+	free(uncut_path);
+	return (path);
+}
+
+void open_files(int *infile, int *outfile, char **argv)
+{
+		*infile = open(argv[1], O_RDONLY);
+		if (*infile == -1)
+		{
+			perror("Error en el infile");
+			exit(EXIT_FAILURE);
+		}
+		*outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (*outfile == -1)
+		{
+			perror("Error en el outfile");
+			exit(EXIT_FAILURE);
+		}
 }
