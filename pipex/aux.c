@@ -1,5 +1,11 @@
 #include "pipex.h"
 
+void error(void)
+{
+	perror("Error");
+	exit(EXIT_FAILURE);
+}
+
 void	free_matrix(char **matrix)
 {
 	int	i;

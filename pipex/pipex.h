@@ -9,7 +9,7 @@
 #include <sys/wait.h> 
 #include "./libft/libft.h"
 
-
+void error(void);
 char *obtain_uncut_path(char **env);
 char **obtain_path(char **env);
 void	free_matrix(char **matrix);

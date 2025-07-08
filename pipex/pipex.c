@@ -17,7 +17,7 @@ void handle_child1(int infile_fd, int pipe_fd[2], char **path, char **argv, char
 	{
 		full_path = malloc(ft_strlen(path[i]) + ft_strlen(args[0]) + 2);
 		if (!full_path)
-			exit(EXIT_FAILURE);
+			error();
 		ft_strcpy(full_path, path[i]);
 		ft_strcat(full_path, "/");
 		ft_strcat(full_path, args[0]);
@@ -30,8 +30,7 @@ void handle_child1(int infile_fd, int pipe_fd[2], char **path, char **argv, char
 		i++;
 	}
 	free_matrix(args); // importante si nunca entra al if
-	perror("falla el hijo 1");
-	exit(EXIT_FAILURE);
+	error();
 }
 
 void handle_child2(int outfile_fd, int pipe_fd[2], char **path, char **argv, char **env)
@@ -64,14 +63,11 @@ void handle_child2(int outfile_fd, int pipe_fd[2], char **path, char **argv, cha
 		i++;
 	}
 	free_matrix(args);
-	perror("falla el hijo 2");
-	exit(EXIT_FAILURE);
+	error();
 }
-
 
 int main(int argc, char **argv, char **env)
 {
-    
 	pid_t pid_cmd1;
 	pid_t pid_cmd2;
 	char **path;
@@ -85,24 +81,15 @@ int main(int argc, char **argv, char **env)
 	path = obtain_path(env);
 	open_files(&infile_fd, &outfile_fd, argv);
  	if (pipe(pipe_fd) == -1) 
-	{ 
-        perror("Error al crear pipe_fd");
-        exit(EXIT_FAILURE);
-    }
+		error();
 	pid_cmd1 = fork();
 	if (pid_cmd1 == -1)
-	{
-		perror("error en fork 1");
-		exit(EXIT_FAILURE);
-	}
+		error();
 	else if (pid_cmd1 == 0) 
 		handle_child1(infile_fd, pipe_fd, path, argv, env);
 	pid_cmd2 = fork();
  	if (pid_cmd2 == -1)
-	{
-		perror("error en fork 2");
-		exit(EXIT_FAILURE);
-	}
+		error();
  	if (pid_cmd2 == 0) 
 		handle_child2(outfile_fd, pipe_fd, path, argv, env);
 	close(infile_fd);
