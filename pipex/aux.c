@@ -64,11 +64,8 @@ char **obtain_path(char **env)
 void open_files(int *infile, int *outfile, char **argv)
 {
 		*infile = open(argv[1], O_RDONLY);
-		if (*infile == -1)
-		{
+		if (*infile == -1 || (access(argv[1], F_OK | R_OK) != 0))
 			perror("Error en el infile");
-			exit(EXIT_FAILURE);
-		}
 		*outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (*outfile == -1)
 		{
