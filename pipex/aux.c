@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   aux.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ridoming <ricardo270696@gmail.com>         +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/10 23:30:16 by ridoming          #+#    #+#             */
+/*   Updated: 2025/07/10 23:31:31 by ridoming         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "pipex.h"
 
-void error(char *msg, int mod)
+void	error(char *msg, int mod)
 {
 	if (mod == 1)
 	{
@@ -11,7 +23,7 @@ void error(char *msg, int mod)
 	{
 		perror(msg);
 		exit(127);
-	} 
+	}
 }
 
 void	free_matrix(char **matrix)
@@ -30,12 +42,12 @@ void	free_matrix(char **matrix)
 	}
 }
 
-char **get_path(char **env)
+char	**get_path(char **env)
 {
-	char *uncut_path;
-	char **path;
-	int i;
-	
+	char	*uncut_path;
+	char	**path;
+	int		i;
+
 	i = 0;
 	while (env[i] && ft_strncmp(env[i], "PATH=", 5) != 0)
 		i++;
@@ -50,12 +62,12 @@ char **get_path(char **env)
 	return (path);
 }
 
-void open_files(int *infile, int *outfile, char **argv)
+void	open_files(int *infile, int *outfile, char **argv)
 {
-		*infile = open(argv[1], O_RDONLY);
-		if (*infile == -1 || (access(argv[1], F_OK | R_OK) != 0))
-			perror("Infile error");
-		*outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (*outfile == -1)
-			error("Outfile error", 1);
+	*infile = open(argv[1], O_RDONLY);
+	if (*infile == -1 || (access(argv[1], F_OK | R_OK) != 0))
+		perror("Infile error");
+	*outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (*outfile == -1)
+		perror("Outfile error");
 }
