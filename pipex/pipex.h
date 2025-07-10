@@ -9,9 +9,8 @@
 #include <sys/wait.h> 
 #include "./libft/libft.h"
 
-void error(void);
-char *obtain_uncut_path(char **env);
-char **obtain_path(char **env);
+void error(char *msg, int mod);
+char **get_path(char **env);
 void	free_matrix(char **matrix);
 void open_files(int *infile, int *outfile, char **argv);
 #endif
