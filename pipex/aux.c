@@ -62,7 +62,7 @@ char	**get_path(char **env)
 	return (path);
 }
 
-void	open_files(int *infile, int *outfile, char **argv)
+/* void	open_files(int *infile, int *outfile, char **argv)
 {
 	*infile = open(argv[1], O_RDONLY);
 	if (*infile == -1 || (access(argv[1], F_OK | R_OK) != 0))
@@ -70,4 +70,15 @@ void	open_files(int *infile, int *outfile, char **argv)
 	*outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (*outfile == -1)
 		perror("Outfile error");
+}
+ */
+
+void	open_files(int *infile, int *outfile, char **argv)
+{
+	*infile = open(argv[1], O_RDONLY);
+	if (*infile == -1)
+		perror("pipex: Error al abrir archivo de entrada");
+	*outfile = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (*outfile == -1)
+		perror("pipex: Error al crear/abrir archivo de salida");
 }
