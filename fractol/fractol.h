@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 14:31:41 by ridoming          #+#    #+#             */
-/*   Updated: 2025/07/18 18:09:36 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/07/18 18:36:27 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,5 +21,6 @@
 #include <math.h>
 # include <stdlib.h>
 #include "./minilibx-linux/mlx.h"
+#include "libft/libft.h"
 
 # endif
