@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 14:31:49 by ridoming          #+#    #+#             */
-/*   Updated: 2025/07/18 18:24:43 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/07/18 18:40:43 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,6 @@ int handle_destroy(void *d)
 
 int main()
 {
-
 	t_data data;
 	
 	data.mlx_ptr = mlx_init();
