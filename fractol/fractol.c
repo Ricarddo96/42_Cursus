@@ -6,49 +6,63 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 14:31:49 by ridoming          #+#    #+#             */
-/*   Updated: 2025/07/15 15:50:28 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/07/18 18:24:43 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "fractol.h"
 
-int	handle_keypress(int keysym, void *data)
+typedef struct s_data
 {
-	(void)data;
-	if (keysym == 65307)
+	void *mlx_ptr;
+	void *win_ptr;
+} t_data;
+
+void	ft_error(char *msg, int code)
+{
+	write(2, "Error: ", 7);
+	write(2, msg, ft_strlen(msg)); 
+	write(2, "\n", 1);
+	exit(code);
+}
+
+int handle_keypress(int keysym, void *d)
+{
+	t_data *data;
+	 
+	data = (t_data *)d;
+	if (keysym == KEY_ESC)
 	{
-		write(1, "ESC presionado. Saliendo...\n", 28);
-		exit(0);
+		mlx_destroy_window(data->mlx_ptr, data->win_ptr);
+		mlx_destroy_display(data->mlx_ptr);
+		exit(EXIT_SUCCESS); 
 	}
 	return (0);
 }
-
-int	handle_destroy(void *data)
+int handle_destroy(void *d)
 {
-	(void)data;
-	write(1, "Cerrando ventana con la cruz. Saliendo...\n", 42);
-	exit(0);
+	t_data *data;
+	
+	data = (t_data *)d;
+	mlx_destroy_window(data->mlx_ptr, data->win_ptr);
+	mlx_destroy_display(data->mlx_ptr);
+	exit(EXIT_SUCCESS);
 }
 
-int	main(void)
+int main()
 {
-	void	*mlx_ptr;
-	void	*win_ptr;
 
-	mlx_ptr = mlx_init();
-	if (mlx_ptr == NULL)
-		return (1);
-	win_ptr = mlx_new_window(mlx_ptr, 800, 600, "Fract-ol: Mi Primera Ventana");
-	if (win_ptr == NULL)
-	{
-		// mlx_destroy_display(mlx_ptr); // Comenta si tu version de mlx no lo tiene
-		return (1);
-	}
-
-	mlx_key_hook(win_ptr, handle_keypress, NULL);
-	mlx_hook(win_ptr, 17, 0, handle_destroy, NULL);
-
-	mlx_loop(mlx_ptr);
-
+	t_data data;
+	
+	data.mlx_ptr = mlx_init();
+	if (data.mlx_ptr == NULL)
+		ft_error("Initialization error", EXIT_FAILURE);
+		
+	data.win_ptr = mlx_new_window(data.mlx_ptr, 800, 800, "fractol");
+	if (data.win_ptr == NULL)
+		ft_error("Failed to create window", EXIT_FAILURE);
+	mlx_hook(data.win_ptr, DESTROY_NOTIFY, 0, handle_destroy, &data);
+	mlx_key_hook(data.win_ptr, handle_keypress, &data);
+	mlx_loop(data.mlx_ptr);
 	return (0);
-}
+}	

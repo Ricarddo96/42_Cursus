@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 18:27:49 by ridoming          #+#    #+#             */
-/*   Updated: 2025/07/14 18:27:53 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/07/18 18:25:10 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,12 +80,12 @@ int	main(int argc, char **argv, char **envp)
 	t_data	data;
 
 	if (argc != 5)
-		error("Use: ./pipex <infile> <cmd1> <cmd2> <outfile>", 1);
+		ft_error("Use: ./pipex <infile> <cmd1> <cmd2> <outfile>", 1);
 	data.env = envp;
 	data.path = get_path_from_env(envp);
 	open_files(&data.infile_fd, &data.outfile_fd, argv);
 	if (pipe(data.pipe_fd) == -1)
-		error("pipe failed", 1);
+		ft_error("pipe failed", 1);
 	data.pid1 = fork();
 	if (data.pid1 == 0)
 		handle_child1(data.infile_fd, data.pipe_fd, &data, argv);

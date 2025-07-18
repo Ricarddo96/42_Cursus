@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 18:28:08 by ridoming          #+#    #+#             */
-/*   Updated: 2025/07/14 18:36:53 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/07/18 18:25:10 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ typedef struct s_data
 	int		status2;
 }				t_data;
 
-void	error(char *msg, int mod);
+void	ft_error(char *msg, int mod);
 void	child_error_exit(char *msg, int code, char **args, t_data *data);
 void	open_files(int *infile, int *outfile, char **argv);
 void	execute_cmd(char **path_env, char **args, t_data *data);

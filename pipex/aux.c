@@ -6,16 +6,18 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/14 18:28:15 by ridoming          #+#    #+#             */
-/*   Updated: 2025/07/14 18:28:18 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/07/18 18:27:59 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	error(char *msg, int mod)
+void	ft_error(char *msg, int code)
 {
-	perror(msg);
-	exit(mod);
+	write(2, "Error: ", 7);
+	write(2, msg, ft_strlen(msg));
+	write(2, "\n", 1);
+	exit(code);
 }
 
 void	child_error_exit(char *msg, int code, char **args, t_data *data)
@@ -51,7 +53,7 @@ char	**get_path_from_env(char **envp)
 		{
 			paths = ft_split(envp[i] + 5, ':');
 			if (!paths)
-				error("Error: Fallo en ft_split al obtener PATH", 1);
+				ft_error("Error: Fallo en ft_split al obtener PATH", 1);
 			return (paths);
 		}
 		i++;
