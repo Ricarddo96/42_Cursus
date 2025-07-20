@@ -3,7 +3,7 @@ NAME = fractol
 CC = cc
 CFLAGS = -Wall -Wextra -Werror
 
-SRCS = fractol.c
+SRCS = fractol.c utils.c
 OBJS = $(SRCS:.c=.o)
 
 BONUS_SRCS = fractol_bonus.c
