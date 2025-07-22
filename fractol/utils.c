@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/20 16:59:54 by ridoming          #+#    #+#             */
-/*   Updated: 2025/07/20 17:01:16 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/07/22 19:13:23 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	ft_error(char *msg, int code)
 void	print_help(void)
 {
 	write(1, "\nUsage: ./fractol <fractal_name> ", 33);
-	write(1, "[optional_julia_parameters]\n\nAvailable fractals:\n\n", 53);
+	write(1, "[optional_julia_parameters]\n\nAvailable fractals:\n\n", 51);
 	write(1, "mandelbrot\n", 11);
 	write(1, "  julia <real_value> <imaginary_value>\n\n", 41);
 	write(1, "Examples:\n\n", 11);

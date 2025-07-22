@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 14:31:41 by ridoming          #+#    #+#             */
-/*   Updated: 2025/07/20 16:55:18 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/07/22 17:55:50 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,8 @@
 
 # define KEY_ESC 65307
 # define DESTROY_NOTIFY 17
+# define WIDTH 800
+# define HEIGHT 800
 
 #include <stdio.h>
 #include <unistd.h>
@@ -48,6 +50,10 @@ typedef struct s_data
 	double		zoom;
 	double		offset_x;
 	double		offset_y;
+	double		z_r;
+	double		z_i;
+	double 		c_r;
+	double		c_i;
 } t_data;
 
 void	ft_error(char *msg, int code);
