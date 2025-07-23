@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 14:31:41 by ridoming          #+#    #+#             */
-/*   Updated: 2025/07/22 17:55:50 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/07/23 12:31:43 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,20 @@
 
 # define KEY_ESC 65307
 # define DESTROY_NOTIFY 17
-# define WIDTH 800
-# define HEIGHT 800
+# define WIDTH 750
+# define HEIGHT 750
+# define SCROLL_UP 4
+# define SCROLL_DOWN 5
+# define KEY_LEFT 65361
+# define KEY_UP 65362
+# define KEY_RIGHT 65363
+# define KEY_DOWN 65364
+# define BUTTON_PRESS_MASK (1L<<2)
 
 #include <stdio.h>
 #include <unistd.h>
 #include <math.h>
-# include <stdlib.h>
+#include <stdlib.h>
 #include "./minilibx-linux/mlx.h"
 #include "libft/libft.h"
 
@@ -50,10 +57,6 @@ typedef struct s_data
 	double		zoom;
 	double		offset_x;
 	double		offset_y;
-	double		z_r;
-	double		z_i;
-	double 		c_r;
-	double		c_i;
 } t_data;
 
 void	ft_error(char *msg, int code);

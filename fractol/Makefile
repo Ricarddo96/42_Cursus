@@ -1,7 +1,7 @@
 NAME = fractol
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -O3
 
 SRCS = fractol.c utils.c
 OBJS = $(SRCS:.c=.o)
