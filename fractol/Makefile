@@ -28,10 +28,10 @@ $(LIBFT_LIB):
 	$(MAKE) -C $(LIBFT_DIR)
 
 $(NAME): $(OBJS) $(MLX_LIB) $(LIBFT_LIB)
-	$(CC) $(CFLAGS) $(OBJS) $(MLX_FLAGS) $(LIBFT_FLAGS) -o $(NAME)
+	$(CC) $(CFLAGS) $(OBJS) $(MLX_FLAGS) $(LIBFT_FLAGS) -lm -o $(NAME) 
 
 bonus: $(BONUS_OBJS) $(MLX_LIB) $(LIBFT_LIB)
-	$(CC) $(CFLAGS) $(BONUS_OBJS) $(MLX_FLAGS) $(LIBFT_FLAGS) -o $(NAME)
+	$(CC) $(CFLAGS) $(BONUS_OBJS) $(MLX_FLAGS) $(LIBFT_FLAGS) -lm -o $(NAME)
 
 clean:
 	rm -f $(OBJS) $(BONUS_OBJS)

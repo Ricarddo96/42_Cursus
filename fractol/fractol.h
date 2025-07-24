@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 14:31:41 by ridoming          #+#    #+#             */
-/*   Updated: 2025/07/23 12:31:43 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/07/24 19:30:32 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 
 # define KEY_ESC 65307
 # define DESTROY_NOTIFY 17
-# define WIDTH 750
-# define HEIGHT 750
+# define WIDTH 700
+# define HEIGHT 700
 # define SCROLL_UP 4
 # define SCROLL_DOWN 5
 # define KEY_LEFT 65361
@@ -57,6 +57,13 @@ typedef struct s_data
 	double		zoom;
 	double		offset_x;
 	double		offset_y;
+	double		julia_c_r;
+	double		julia_c_i;
+	double z_r_tmp;
+	double c_real;
+	double c_imag;
+	double z_real;
+	double z_imag;
 } t_data;
 
 void	ft_error(char *msg, int code);
