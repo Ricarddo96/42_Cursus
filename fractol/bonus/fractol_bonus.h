@@ -1,17 +1,17 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   fractol.h                                          :+:      :+:    :+:   */
+/*   fractol_bonus.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/07/15 14:31:41 by ridoming          #+#    #+#             */
-/*   Updated: 2025/07/26 18:22:02 by ridoming         ###   ########.fr       */
+/*   Created: 2025/07/26 18:43:21 by ridoming          #+#    #+#             */
+/*   Updated: 2025/07/26 19:44:35 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FRACTOL_H
-# define FRACTOL_H
+#ifndef FRACTOL_BONUS_H
+# define FRACTOL_BONUS_H
 
 # define KEY_ESC 65307
 # define DESTROY_NOTIFY 17
@@ -28,13 +28,14 @@
 # include <unistd.h>
 # include <math.h>
 # include <stdlib.h>
-# include "./minilibx-linux/mlx.h"
-# include "libft/libft.h"
+# include "../minilibx-linux/mlx.h"
+# include "../libft/libft.h"
 
 typedef enum e_fractal_type
 {
 	MANDELBROT,
-	JULIA
+	JULIA,
+	BURNING_SHIP
 }			t_ftype;
 
 typedef struct s_img
@@ -75,5 +76,6 @@ void	put_pixel(t_img *img, int x, int y, int color);
 void	render_fractal(t_data *data);
 void	cleanup(t_data *data);
 int		mouse_hook(int button, int x, int y, t_data *d);
+void	fractal_logic(t_data *d, int *iter);
 
 #endif

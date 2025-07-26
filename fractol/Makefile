@@ -1,25 +1,36 @@
 NAME = fractol
+BONUS_NAME = fractol_bonus
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -O3
 
-SRCS = fractol.c utils.c
-OBJS = $(SRCS:.c=.o)
-
-BONUS_SRCS = fractol_bonus.c
-BONUS_OBJS = $(BONUS_SRCS:.c=.o)
-
 MLX_DIR = minilibx-linux
-MLX_LIB = $(MLX_DIR)/libmlx.a
-MLX_FLAGS = -L$(MLX_DIR) -lmlx -lXext -lX11 -lbsd
-
 LIBFT_DIR = libft
-LIBFT_LIB = $(LIBFT_DIR)/libft.a
-LIBFT_FLAGS = -L$(LIBFT_DIR) -lft
+BONUS_DIR = bonus
 
-INCLUDES = -I$(MLX_DIR) -I$(LIBFT_DIR)
+MLX_LIB = $(MLX_DIR)/libmlx.a
+LIBFT_LIB = $(LIBFT_DIR)/libft.a
+MLX_FLAGS = -L$(MLX_DIR) -lmlx -lXext -lX11 -lbsd
+LIBFT_FLAGS = -L$(LIBFT_DIR) -lft
+INCLUDES = -I. -I$(MLX_DIR) -I$(LIBFT_DIR)
+
+SRC = main.c render.c events.c
+OBJ = $(SRC:.c=.o)
+
+BONUS_SRC = $(BONUS_DIR)/main_bonus.c \
+			$(BONUS_DIR)/render_bonus.c \
+			$(BONUS_DIR)/events_bonus.c
+BONUS_OBJ = $(BONUS_SRC:.c=.o)
 
 all: $(NAME)
+
+$(NAME): $(OBJ) $(MLX_LIB) $(LIBFT_LIB)
+	$(CC) $(CFLAGS) $(OBJ) $(MLX_FLAGS) $(LIBFT_FLAGS) -lm -o $(NAME)
+
+bonus: $(BONUS_NAME)
+
+$(BONUS_NAME): $(BONUS_OBJ) $(MLX_LIB) $(LIBFT_LIB)
+	$(CC) $(CFLAGS) $(BONUS_OBJ) $(MLX_FLAGS) $(LIBFT_FLAGS) -lm -o $(BONUS_NAME)
 
 $(MLX_LIB):
 	$(MAKE) -C $(MLX_DIR)
@@ -27,21 +38,15 @@ $(MLX_LIB):
 $(LIBFT_LIB):
 	$(MAKE) -C $(LIBFT_DIR)
 
-$(NAME): $(OBJS) $(MLX_LIB) $(LIBFT_LIB)
-	$(CC) $(CFLAGS) $(OBJS) $(MLX_FLAGS) $(LIBFT_FLAGS) -lm -o $(NAME) 
-
-bonus: $(BONUS_OBJS) $(MLX_LIB) $(LIBFT_LIB)
-	$(CC) $(CFLAGS) $(BONUS_OBJS) $(MLX_FLAGS) $(LIBFT_FLAGS) -lm -o $(NAME)
-
 clean:
-	rm -f $(OBJS) $(BONUS_OBJS)
-	$(MAKE) clean -C $(MLX_DIR)
-	$(MAKE) clean -C $(LIBFT_DIR)
+	rm -f $(OBJ) $(BONUS_OBJ)
+	$(MAKE) -C $(MLX_DIR) clean
+	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
-	rm -f $(NAME)
-	$(MAKE) fclean -C $(LIBFT_DIR)
+	rm -f $(NAME) $(BONUS_NAME)
+	$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all bonus clean fclean re
