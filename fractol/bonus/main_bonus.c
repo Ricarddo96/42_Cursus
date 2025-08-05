@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/15 14:31:49 by ridoming          #+#    #+#             */
-/*   Updated: 2025/07/26 19:13:32 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/07/31 17:14:22 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,11 +55,11 @@ void	print_help(void)
 	(void)a;
 	a = write(1, "Examples:\n\n", 11);
 	(void)a;
-	a = write(1, "  ./fractol mandelbrot\n", 24);
+	a = write(1, "  ./fractol_bonus mandelbrot\n", 30);
 	(void)a;
-	a = write(1, "  ./fractol julia 0.245 0.03\n", 29);
+	a = write(1, "  ./fractol_bonus julia 0.245 0.03\n", 35);
 	(void)a;
-	a = write(1, "  ./fractol burning\n\n", 22);
+	a = write(1, "  ./fractol_bonus burning\n\n", 28);
 	(void)a;
 	exit(EXIT_SUCCESS);
 }
