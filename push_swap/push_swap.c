@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:11:42 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/05 18:40:04 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/06 16:51:52 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,34 +35,50 @@ int check_number(char *str, t_stack *stack)
 		}
 		i++;
 	}
-	if (ft_atoi(str) > INT_MAX)
+	if (ft_atol(str) > INT_MAX)
 	{
 		//cleanup function
 		exit_n_error("Error\n", 1);
 	}
 	
 }
+t_node *create_node(int num)
+{
+	t_node *new_node;
+
+	new_node = (t_node *)malloc(sizeof(t_node));
+	if (!new_node)
+		exit_n_error("Error\n", 1); // de momento no se si hay que hacer un cleanup aqui
+	new_node->next = NULL;
+	new_node->prev = NULL;
+	new_node->num = num;
+	return (new_node);
+}
 
 void	parse_arguments(char **argv, t_stack *stack)
 {
+	t_node *current_node;
     int i;
 	
-	i = 0;
+	i = 1;
+	stack->first = NULL;
+	stack->last = NULL;
+	stack->size = 0;
 	while (argv[i])
 	{
 		check_number(argv[i], stack);
-		if (argv[0])
+		current_node = create_node(ft_atol(argv[i]));
+		if (stack->size == 0)
 		{
-			// 1. create node 
-			// 2. ponerlo como el last
-			stack->last;
+			stack->first = current_node;
+			stack->last = current_node;
 		}
 		else 
 		{
-			// 1. create node 
-			// 2. ponerlo como primero en el stack
-			stack->first;
+			stack->first = current_node;
+			stack->last->prev;
 		}
+		stack->size++;
 		i++;	
 	}
 }
