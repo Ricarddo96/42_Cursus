@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:11:42 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/06 16:51:52 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/06 19:19:33 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,24 +23,33 @@ void exit_n_error(char *msg, int mod)
 
 int check_number(char *str, t_stack *stack)
 {
+	long num;
 	int i;
+	t_node *current_node;
 
+	current_node = stack->last;
 	i = 0;
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	if (!str[i])
+		exit_n_error("Error\n", 1);
 	while (str[i])
 	{
-		if (ft_isdigit(str[i]) == 0)
-		{
-			//cleanup function
+		if (ft_isdigit(str[i++]) == 0)
 			exit_n_error("Error\n", 1);
-		}
+	}
+	i = 0;
+	num = ft_atol(str);
+	if (num > INT_MAX || num < INT_MIN)
+		exit_n_error("Error\n", 1);
+	while (i < stack->size)
+	{
+		if (num == current_node->num)
+			exit_n_error("Error\n", 1);
+		current_node = current_node->prev;
 		i++;
 	}
-	if (ft_atol(str) > INT_MAX)
-	{
-		//cleanup function
-		exit_n_error("Error\n", 1);
-	}
-	
+	return ((int)num);
 }
 t_node *create_node(int num)
 {
@@ -75,8 +84,9 @@ void	parse_arguments(char **argv, t_stack *stack)
 		}
 		else 
 		{
+			current_node->next = stack->first;
+			stack->first->prev = current_node;
 			stack->first = current_node;
-			stack->last->prev;
 		}
 		stack->size++;
 		i++;	
