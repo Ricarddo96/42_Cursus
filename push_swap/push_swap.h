@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:53:37 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/07 15:28:39 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/07 17:25:11 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,5 +52,7 @@ void    reverse_rotate(t_stack *stack);
 void    rra(t_stack *stack_a);
 void    rrb(t_stack *stack_b);
 void    rrr(t_stack *stack_a, t_stack *stack_b);
+
+void order_three_numbers(t_stack *stack_a);
 
 #endif

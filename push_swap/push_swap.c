@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:11:42 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/07 11:48:11 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/07 18:04:42 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,12 +93,75 @@ void	parse_arguments(char **argv, t_stack *stack)
 	}
 }
 
+void order_three_numbers(t_stack *stack_a)
+{
+	
+	int a = stack_a->first->num;
+	int b = stack_a->first->next->num;
+	int c = stack_a->last->num;
+	
+	// CASO A, B, C
+	if (a < b && b < c)
+		return;
+	// CASO A, C, B
+	else if (a < c && c < b)
+    {
+        sa(stack_a);
+        ra(stack_a);
+    }
+    // CASO: B, A, C
+    else if (b < a && a < c)
+        sa(stack_a);
+    // CASO: B, C, A
+    else if (b < c && c < a)
+        rra(stack_a);
+    // CASO: C, A, B
+    else if (c < a && a < b)
+        ra(stack_a);
+    // CASO: C, B, A
+    else if (c < b && b < a)
+    {
+        sa(stack_a);
+        rra(stack_a);
+    }
+}
+
+int check_lower_of_stack(t_stack *a, t_stack *b)
+{
+	int i = 0;
+	int num = a->first->num;
+	t_node *next_num = a->first->next;
+	
+	while (i < a->size)
+	{
+		if (next_num->num < num)
+		{
+			num = next_num;
+		}
+		next_num = next_num->next;
+		i++;
+	}
+	// falta saber la posicion del nodo para saber cuantos ra
+	
+}
+
+void order_five_numbers(t_stack *stack_a, t_stack *stack_b)
+{
+	
+		
+}
+
 int	main(int argc, char **argv)
 {
 	t_stack *stack_a;
 	t_stack *stack_b;
-// 1 numero de args correcto 
-// parseo de los argumentos e ir metiendolos al stack a
+
+	(void)argc;
+	stack_a = (t_stack *)malloc(sizeof(t_stack));
+	stack_b = (t_stack *)malloc(sizeof(t_stack));
+	if (!stack_a || !stack_b)
+		exit_n_error("Error\n", 1);
 	parse_arguments(argv, stack_a);
+	order_three_numbers(stack_a);	
 	return (0);            
 }
