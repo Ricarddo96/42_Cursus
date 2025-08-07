@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:53:37 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/04 19:11:20 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/07 12:43:52 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,14 @@ typedef struct s_stack
     int size;
     t_node *last;
 } t_stack;
+
+void exit_n_error(char *msg, int mod);
+int check_number(char *str, t_stack *stack);
+t_node *create_node(int num);
+void	parse_arguments(char **argv, t_stack *stack);
+void	swap_nodes(t_stack *stack);
+void	sa(t_stack *stack_a);
+void	sb(t_stack *stack_b);
+void	ss(t_stack *stack_a, t_stack *stack_b);
 
 #endif
