@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:11:42 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/07 18:04:42 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/08 20:02:23 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ void exit_n_error(char *msg, int mod)
 {
 	if (mod == 1)
 	{
-		write(2, &msg, ft_strlen(msg));
+		write(2, msg, ft_strlen(msg));
 		exit(EXIT_FAILURE);	
 	}
 }
@@ -84,9 +84,9 @@ void	parse_arguments(char **argv, t_stack *stack)
 		}
 		else 
 		{
-			current_node->next = stack->first;
-			stack->first->prev = current_node;
-			stack->first = current_node;
+			current_node->prev = stack->last;
+			stack->last->next = current_node;
+			stack->last = current_node;
 		}
 		stack->size++;
 		i++;	
@@ -95,30 +95,23 @@ void	parse_arguments(char **argv, t_stack *stack)
 
 void order_three_numbers(t_stack *stack_a)
 {
-	
-	int a = stack_a->first->num;
-	int b = stack_a->first->next->num;
-	int c = stack_a->last->num;
-	
-	// CASO A, B, C
-	if (a < b && b < c)
-		return;
-	// CASO A, C, B
-	else if (a < c && c < b)
+    int a = stack_a->first->num;
+    int b = stack_a->first->next->num;
+    int c = stack_a->last->num;
+    
+    if (a < b && b < c)
+        return;
+    else if (a < c && c < b)
     {
         sa(stack_a);
         ra(stack_a);
     }
-    // CASO: B, A, C
     else if (b < a && a < c)
         sa(stack_a);
-    // CASO: B, C, A
     else if (b < c && c < a)
         rra(stack_a);
-    // CASO: C, A, B
     else if (c < a && a < b)
         ra(stack_a);
-    // CASO: C, B, A
     else if (c < b && b < a)
     {
         sa(stack_a);
@@ -126,29 +119,70 @@ void order_three_numbers(t_stack *stack_a)
     }
 }
 
-int check_lower_of_stack(t_stack *a, t_stack *b)
+int get_min_index(t_stack *stack)
 {
-	int i = 0;
-	int num = a->first->num;
-	t_node *next_num = a->first->next;
-	
-	while (i < a->size)
-	{
-		if (next_num->num < num)
-		{
-			num = next_num;
-		}
-		next_num = next_num->next;
-		i++;
-	}
-	// falta saber la posicion del nodo para saber cuantos ra
-	
+    t_node *current;
+    int min_value;
+    int min_index;
+    int i;
+
+    if (!stack || stack->size == 0)
+        return -1; // Comprobación de seguridad al principio.
+
+    current = stack->first;
+    min_value = current->num;
+    min_index = 0;
+    i = 0;
+
+    while (current)
+    {
+        if (current->num < min_value)
+        {
+            min_value = current->num;
+            min_index = i;
+        }
+        current = current->next;
+        i++;
+    }
+    return min_index;
+}
+void push_min_to_b(t_stack *a, t_stack *b)
+{
+    int min_pos;
+    int i;
+
+    min_pos = get_min_index(a);
+    if (min_pos <= a->size / 2)
+    {
+        i = 0;
+        while (i < min_pos)
+        {
+            ra(a);
+            i++;
+        }
+    }
+    else
+    {
+        i = 0;
+        while (i < a->size - min_pos)
+        {
+            rra(a);
+            i++;
+        }
+    }
+    pb(a, b);
 }
 
 void order_five_numbers(t_stack *stack_a, t_stack *stack_b)
 {
-	
-		
+    while (stack_a->size > 3)
+    {
+        push_min_to_b(stack_a, stack_b);
+    }
+    order_three_numbers(stack_a);
+
+    while (stack_b->size > 0)
+        pa(stack_a, stack_b);
 }
 
 int	main(int argc, char **argv)
@@ -162,6 +196,6 @@ int	main(int argc, char **argv)
 	if (!stack_a || !stack_b)
 		exit_n_error("Error\n", 1);
 	parse_arguments(argv, stack_a);
-	order_three_numbers(stack_a);	
+	order_five_numbers(stack_a, stack_b);	
 	return (0);            
 }
