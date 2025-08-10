@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:11:42 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/08 20:02:23 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/10 17:17:22 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,13 +42,16 @@ int check_number(char *str, t_stack *stack)
 	num = ft_atol(str);
 	if (num > INT_MAX || num < INT_MIN)
 		exit_n_error("Error\n", 1);
-	while (i < stack->size)
-	{
-		if (num == current_node->num)
-			exit_n_error("Error\n", 1);
-		current_node = current_node->prev;
-		i++;
-	}
+	if (stack->size > 0)
+    {
+        current_node = stack->first;
+        while (current_node)
+        {
+            if (current_node->num == (int)num)
+                exit_n_error("Error\n", 1);
+            current_node = current_node->next;
+        }
+    }
 	return ((int)num);
 }
 t_node *create_node(int num)
@@ -98,7 +101,7 @@ void order_three_numbers(t_stack *stack_a)
     int a = stack_a->first->num;
     int b = stack_a->first->next->num;
     int c = stack_a->last->num;
-    
+
     if (a < b && b < c)
         return;
     else if (a < c && c < b)
@@ -109,15 +112,16 @@ void order_three_numbers(t_stack *stack_a)
     else if (b < a && a < c)
         sa(stack_a);
     else if (b < c && c < a)
-        rra(stack_a);
-    else if (c < a && a < b)
         ra(stack_a);
+    else if (c < a && a < b)
+        rra(stack_a);
     else if (c < b && b < a)
     {
         sa(stack_a);
         rra(stack_a);
     }
 }
+
 
 int get_min_index(t_stack *stack)
 {
