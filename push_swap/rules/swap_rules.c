@@ -1,5 +1,5 @@
 
-#include "push_swap.h"
+#include "../push_swap.h"
 
 void	swap_nodes(t_stack *stack)
 {
