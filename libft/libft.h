@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/18 18:49:23 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/06 16:21:24 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/12 17:01:18 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,5 +69,6 @@ t_list	*ft_lstnew(void *content);
 int		ft_lstsize(t_list *lst);
 double	ft_atof(const char *nptr);
 long	ft_atol(const char *nptr);
+int		ft_max(int num_1, int num_2);
 
 #endif

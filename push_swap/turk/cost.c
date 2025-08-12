@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   turk.c                                             :+:      :+:    :+:   */
+/*   cost.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 18:54:47 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/11 20:54:04 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/12 16:53:42 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,12 +81,24 @@ int calculate_cost(t_node *actual_node, t_stack *stack_a, t_stack *stack_b)
 {
     int cost_a;
     int cost_b;
+    int index_a;
+    int index_b;
+    int dir_a;
+    int dir_b;
     int total_cost;
     
     cost_a = 0;
     cost_b = 0;
-    cost_a = get_node_index(actual_node, stack_a);
-    cost_b = get_node_index(get_target_node(actual_node, stack_b), stack_b);
+    index_a = get_node_index(actual_node, stack_a);
+    index_b = get_node_index(get_target_node(actual_node, stack_b), stack_b);
+    if (index_a > (stack_a->size / 2))
+        cost_a = stack_a->size - index_a;
+    else
+        cost_a = index_a;
+    if (index_b > (stack_b->size / 2))
+        cost_b = stack_b->size - index_b;
+    else
+        cost_b = index_b;
     total_cost = cost_a + cost_b + 1;
     return (total_cost);
 }
