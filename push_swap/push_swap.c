@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:11:42 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/11 18:59:22 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/12 18:27:15 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,11 +86,8 @@ int	main(int argc, char **argv)
     {
         pb(stack_a, stack_b);
         pb(stack_a, stack_b);
-        while (stack_a->size > 3)
-        {
-            /* code */
-        }
-        
+        main_loop();
+        order_three_numbers(stack_a);
     }
-	return (0);            
+    return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 18:54:47 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/12 16:53:42 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/12 17:40:55 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,31 +76,17 @@ t_node *get_target_node(t_node *node, t_stack *stack_b)
         target_node = get_biggest_node(stack_b);
     return (target_node);
 }
-
-int calculate_cost(t_node *actual_node, t_stack *stack_a, t_stack *stack_b)
+int	calculate_cost(t_node *node, t_stack *stack_a, t_stack *stack_b, t_cost c)
 {
-    int cost_a;
-    int cost_b;
-    int index_a;
-    int index_b;
-    int dir_a;
-    int dir_b;
-    int total_cost;
+    int total;
     
-    cost_a = 0;
-    cost_b = 0;
-    index_a = get_node_index(actual_node, stack_a);
-    index_b = get_node_index(get_target_node(actual_node, stack_b), stack_b);
-    if (index_a > (stack_a->size / 2))
-        cost_a = stack_a->size - index_a;
-    else
-        cost_a = index_a;
-    if (index_b > (stack_b->size / 2))
-        cost_b = stack_b->size - index_b;
-    else
-        cost_b = index_b;
-    total_cost = cost_a + cost_b + 1;
-    return (total_cost);
+    total = 0;
+	c.index_a = get_node_index(node, stack_a);
+	c.index_b = get_node_index(get_target_node(node, stack_b), stack_b);
+	c.ra_rb = ft_max(c.index_a, c.index_b);
+	c.rra_rrb = ft_max(stack_a->size - c.index_a, stack_b->size - c.index_b);
+	c.ra_rrb = c.index_a + (stack_b->size - c.index_b);
+	c.rra_rb = (stack_a->size - c.index_a) + c.index_b;
+    total = ft_min(ft_min(c.ra_rb, c.rra_rrb), ft_min(c.ra_rrb, c.rra_rb)) + 1;
+	return (total);
 }
-
-///// PROXIMOS PASOS : AJUSTAR CALCULATE COST PARA QUE CALCULE SI LE VIENE MEJOR HACER RA O RRA Y CALCULAR EL COSTE EN BASE A ESO

@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:53:37 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/11 18:58:10 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/12 17:46:50 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "./libft/libft.h"
 # include <stdlib.h> 
 # include <limits.h>
+
 
 typedef struct s_node
 {
@@ -33,9 +34,19 @@ typedef struct s_stack
     t_node  *last;
 } t_stack;
 
+typedef struct s_cost
+{
+    int     index_a;
+	int     index_b;
+	int     ra_rb;
+	int     rra_rrb;
+	int     ra_rrb;
+	int     rra_rb;
+} t_cost;
+
 t_node  *create_node(int num);
 int     check_number(char *str, t_stack *stack);
-int     calculate_cost(t_node *actual_node, t_stack *stack_a, t_stack *stack_b);
+int     calculate_cost(t_node *node, t_stack *stack_a, t_stack *stack_b, t_cost cost);
 void    exit_n_error(char *msg, int mod);
 void	parse_arguments(char **argv, t_stack *stack);
 void    order_two_numbers(t_stack *stack_a);
@@ -54,6 +65,10 @@ void    reverse_rotate(t_stack *stack);
 void    rra(t_stack *stack_a);
 void    rrb(t_stack *stack_b);
 void    rrr(t_stack *stack_a, t_stack *stack_b);
+int     get_node_index(t_node *node, t_stack *stack);
+t_node  *get_biggest_node(t_stack *stack);
+t_node  *get_closest_smaller_node(int num, t_stack *stack_b);
+t_node  *get_target_node(t_node *node, t_stack *stack_b);
 
 void order_three_numbers(t_stack *stack_a);
 
