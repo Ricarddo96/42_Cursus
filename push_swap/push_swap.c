@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:11:42 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/12 18:27:15 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/13 18:56:31 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,12 +82,14 @@ int	main(int argc, char **argv)
         order_two_numbers(stack_a);
     else if (stack_a->size == 3)
         order_three_numbers(stack_a);
-    else if (stack_a->size > 3) // HAY QUE VIGILAR LOS CASOS DE 4 NUMEROS
+    else if (stack_a->size > 3) 
     {
         pb(stack_a, stack_b);
         pb(stack_a, stack_b);
-        main_loop();
+        while (stack_a->size > 3)
+            main_loop(stack_a, stack_b);
         order_three_numbers(stack_a);
     }
     return (0);
 }
+// HAY QUE VIGILAR LOS CASOS DE 4 NUMEROS, COMPLETAR EL MAIN, EL .H ACTUALIZAR EL MAKEFILE, CONTROL DE ERRORES Y LIMPIEZA DE MEMORIA

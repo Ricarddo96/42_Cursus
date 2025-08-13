@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:53:37 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/12 17:46:50 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/13 18:03:07 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ typedef struct s_cost
 
 t_node  *create_node(int num);
 int     check_number(char *str, t_stack *stack);
-int     calculate_cost(t_node *node, t_stack *stack_a, t_stack *stack_b, t_cost cost);
+int     calculate_cost(t_node *node, t_stack *stack_a, t_stack *stack_b, t_cost *c);
 void    exit_n_error(char *msg, int mod);
 void	parse_arguments(char **argv, t_stack *stack);
 void    order_two_numbers(t_stack *stack_a);

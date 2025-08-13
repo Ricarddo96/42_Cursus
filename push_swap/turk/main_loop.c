@@ -6,77 +6,119 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:47:44 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/12 19:14:47 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/13 18:51:25 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-void order_cheapest_node(t_node *node, t_stack *stack_a, t_stack *stack_b)
+void a_up_b_up(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b)
 {
-    // AHORA HAY QUE HACER LA LOGICA PARA DETERMINAR CUANDO ES MAS EFICIENTE UTILIZAR RR O RRR Y HASTA DONDE PORQUE ESTA 
-    // FUNCION ORDENA PERO SOLO CON RA RRA RB RRB ADEMAS TIENE ERRORES EN LA LOGICA
-    // DESPUES DE ESTO LO QUE QUEDA ES AFINAR EL MAIN, VER CASOS ESPECIALES COMO EL CASO DE LOS 4 Y LIMPIAR LA MEMORIA
-    int a_pos;
-    int b_pos;
-    int i = 0;
-    
-    a_pos = get_node_index(node, stack_a);
-    b_pos = get_node_index(get_target_node(node, stack_b), stack_b); 
-    if (a_pos < (stack_a->size / 2))
+    while (a_idx > 0 && b_idx > 0)
     {
-        while (i < a_pos)
-        {
-            ra(stack_a);
-            i++;
-        }
+        rr(stack_a, stack_b);
+        a_idx--;
+        b_idx--;
     }
-    else
+    while (a_idx > 0)
     {
-        while (i < (stack_a->size - a_pos))
-        {
-            rra(stack_a);
-            i++;
-        }   
+        ra(stack_a);
+        a_idx--;
     }
-    i = 0;
-    
-    if (b_pos < (stack_b->size / 2))
+    while (b_idx > 0)
     {
-        while (i < b_pos)
-        {
-            rb(stack_a);
-            i++;
-        }
+        rb(stack_b);
+        b_idx--;
     }
-    else
-    {
-        while (i < (stack_b->size - b_pos))
-        {
-            rrb(stack_a);
-            i++;
-        }   
-    }
-    pb(stack_a, stack_b);
 }
 
-void main_loop(t_stack *a, t_stack *b, t_cost c)
+void a_down_b_down(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b)
+{
+    while (a_idx < stack_a->size && b_idx < stack_b->size)
+    {
+        rrr(stack_a, stack_b);
+        a_idx++;
+        b_idx++;
+    }
+    while (a_idx < stack_a->size)
+    {
+        rra(stack_a);
+        a_idx++;
+    }
+    while (b_idx < stack_b->size)
+    {
+        rrb(stack_b);
+        b_idx++;
+    }
+}
+
+void a_up_b_down(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b)
+{
+    while (a_idx > 0)
+    {
+        ra(stack_a);
+        a_idx--;
+    }
+    while (b_idx < stack_b->size)
+    {
+        rrb(stack_b);
+        b_idx++;
+    }
+}
+
+void a_down_b_up(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b)
+{
+    while (a_idx < stack_a->size)
+    {
+        rra(stack_a);
+        a_idx++;
+    }
+    while (b_idx > 0)
+    {
+        rb(stack_b);
+        b_idx--;
+    }
+}
+void order_cheapest_node(t_node *node, t_stack *a, t_stack *b)
+{
+    int a_idx;
+    int b_idx; 
+    
+    a_idx = get_node_index(node, a);
+    b_idx = get_node_index(get_target_node(node, b), b); 
+    if (a_idx <= a->size / 2 && b_idx <= b->size / 2)
+        a_up_b_up(a_idx, b_idx, a, b);
+    else if (a_idx > a->size / 2 && b_idx > b->size / 2)
+        a_down_b_down(a->size - a_idx, b->size - b_idx, a, b);
+    else if (a_idx <= a->size / 2 && b_idx > b->size / 2)
+        a_up_b_down(a_idx, b->size - b_idx, a, b);
+    else
+        a_down_b_up(a->size - a_idx, b_idx, a, b);
+    pb(a, b);
+}
+
+
+void main_loop(t_stack *a, t_stack *b)
 {
     t_node *i_nd;
     t_node *cheap;
+    t_cost c;
+    int best;
+    int cost;
 
     i_nd = a->first;
     cheap = a->first;
-    while (a->size > 3)
+
+    best = calculate_cost(cheap, a, b, &c);
+    while (i_nd)
     {
-        while (i_nd)
+        cost = calculate_cost(i_nd, a, b, &c);
+        if (cost < best)
         {
-            if (calculate_cost(i_nd, a, b, c) < calculate_cost(cheap, a, b, c))
-            {
-                cheap = i_nd;
-            }
-            i_nd = i_nd->next;
+            best = cost;
+            cheap = i_nd;
         }
-        order_cheapest_node(cheap, a, b);
+        i_nd = i_nd->next;
     }
+    order_cheapest_node(cheap, a, b);
 }
