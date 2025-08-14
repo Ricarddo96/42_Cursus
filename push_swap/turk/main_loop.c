@@ -6,11 +6,11 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:47:44 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/13 18:51:25 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/14 18:22:06 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "push_swap.h"
+#include "../push_swap.h"
 
 void a_up_b_up(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b)
 {
@@ -34,21 +34,21 @@ void a_up_b_up(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b)
 
 void a_down_b_down(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b)
 {
-    while (a_idx < stack_a->size && b_idx < stack_b->size)
+    while (a_idx > 0 && b_idx > 0)
     {
         rrr(stack_a, stack_b);
-        a_idx++;
-        b_idx++;
+        a_idx--;
+        b_idx--;
     }
-    while (a_idx < stack_a->size)
+    while (a_idx > 0)
     {
         rra(stack_a);
-        a_idx++;
+        a_idx--;
     }
-    while (b_idx < stack_b->size)
+    while (b_idx > 0)
     {
         rrb(stack_b);
-        b_idx++;
+        b_idx--;
     }
 }
 
@@ -59,19 +59,19 @@ void a_up_b_down(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b)
         ra(stack_a);
         a_idx--;
     }
-    while (b_idx < stack_b->size)
+    while (b_idx > 0)
     {
         rrb(stack_b);
-        b_idx++;
+        b_idx--;
     }
 }
 
 void a_down_b_up(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b)
 {
-    while (a_idx < stack_a->size)
+    while (a_idx > 0)
     {
         rra(stack_a);
-        a_idx++;
+        a_idx--;
     }
     while (b_idx > 0)
     {
@@ -79,13 +79,19 @@ void a_down_b_up(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b)
         b_idx--;
     }
 }
+
 void order_cheapest_node(t_node *node, t_stack *a, t_stack *b)
 {
     int a_idx;
     int b_idx; 
-    
-    a_idx = get_node_index(node, a);
-    b_idx = get_node_index(get_target_node(node, b), b); 
+    t_node *target;
+
+    a_idx = get_safe_index(node, a);
+    target = get_target_node(node, b);
+    if (!target)
+        b_idx = 0;
+    else
+        b_idx = get_safe_index(target, b);
     if (a_idx <= a->size / 2 && b_idx <= b->size / 2)
         a_up_b_up(a_idx, b_idx, a, b);
     else if (a_idx > a->size / 2 && b_idx > b->size / 2)
@@ -96,7 +102,6 @@ void order_cheapest_node(t_node *node, t_stack *a, t_stack *b)
         a_down_b_up(a->size - a_idx, b_idx, a, b);
     pb(a, b);
 }
-
 
 void main_loop(t_stack *a, t_stack *b)
 {
