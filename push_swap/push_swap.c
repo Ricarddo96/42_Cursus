@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:11:42 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/14 18:55:05 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/16 18:40:32 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ int	main(int argc, char **argv)
             main_loop(stack_a, stack_b);
         order_three_numbers(stack_a);
         while (stack_b->size > 0)
-            pa(stack_a, stack_b);
+            main_loop_back(stack_a, stack_b);
         final_sort(stack_a);
     }
     free_stack(stack_a);
@@ -111,4 +111,31 @@ int	main(int argc, char **argv)
 }
 
 
-//problema, no ordena la pila bien, mirar el caso para 4
+//problema, no ordena la pila bien, mirar el caso para 4, y mirar para el caso que nos lo pasan como una string
+// vale el error creoo que esta en que no pusheamos de vuelta a A mirando si la hemos pusheado en la posicion correcta, en caso de que no sea asi 
+// rotamos hasta encontrar la pposicion correcta en la que puede ser pusheado
+// Cómo debería ser la vuelta con Turk
+/* 
+Mientras b no esté vacío:
+
+Para cada nodo en b, calculas su target en a (el más pequeño mayor que él, o el mínimo si no existe).
+
+Calculas costes (ra, rra, rb, rrb, rr, rrr) para alinear a y b.
+
+Escoges el nodo de b con menor coste.
+
+Haces las rotaciones necesarias.
+
+pa para insertarlo en a.
+
+Cuando b está vacío, haces tu final_sort (rotar a hasta que el mínimo esté arriba).
+
+⚠️ El error concreto en tu código
+
+Tu order_cheapest_node hace pb(a, b) (todavía en la fase de ida).
+
+Pero nunca haces el mismo cálculo al revés (nodo de b → target en a) en la vuelta.
+
+En main simplemente haces while (stack_b->size > 0) pa(...), lo cual ignora totalmente la lógica de posiciones.
+
+ */
