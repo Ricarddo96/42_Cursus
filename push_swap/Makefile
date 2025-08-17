@@ -7,7 +7,7 @@ LIBFT_DIR = libft
 LIBFT_LIB = $(LIBFT_DIR)/libft.a
 LIBFT_FLAGS = -L$(LIBFT_DIR) -lft
 
-SRC = push_swap.c ./rules/push_rules.c ./rules/rotate_rules.c ./rules/r_rotate_rules.c ./rules/swap_rules.c utils.c ./turk/cost.c ./turk/main_loop.c
+SRC = push_swap.c ./rules/push_rules.c ./rules/rotate_rules.c ./rules/r_rotate_rules.c ./rules/swap_rules.c utils.c ./turk/cost.c ./turk/cost_utils.c ./turk/main_loop_utils.c ./turk/main_loop.c parse.c
 OBJ = $(SRC:.c=.o)
 
 all: $(NAME)

@@ -6,51 +6,24 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:11:42 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/16 18:40:32 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/17 16:26:39 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "push_swap.h"
 
-int get_safe_index(t_node *node, t_stack *stack)
+void order_two_numbers(t_stack *stack_a)
 {
-    int idx;
-
-    if (!node || !stack)
-        return 0;
-    idx = get_node_index(node, stack);
-    if (idx < 0)
-        return 0;
-    return (idx);
-}
-
-void	parse_arguments(char **argv, t_stack *stack_a, t_stack *stack_b)
-{
-	t_node *current_node;
-    int i;
-	
-	i = 1;
-	stack_a->first = NULL;
-	stack_a->last = NULL;
-	stack_a->size = 0;
-	while (argv[i])
-	{
-		check_number(argv[i], stack_a);
-		current_node = create_node(ft_atol(argv[i]), stack_a, stack_b);
-		if (stack_a->size == 0)
-		{
-			stack_a->first = current_node;
-			stack_a->last = current_node;
-		}
-		else 
-		{
-			current_node->prev = stack_a->last;
-			stack_a->last->next = current_node;
-			stack_a->last = current_node;
-		}
-		stack_a->size++;
-		i++;	
-	}
+    int num_1;
+    int num_2;
+    
+    num_1 = stack_a->first->num;
+    num_2 = stack_a->last->num;
+    if (num_1 > num_2)
+    {
+        sa(stack_a);
+    }
+    return;
 }
 
 void order_three_numbers(t_stack *stack_a)
@@ -79,17 +52,32 @@ void order_three_numbers(t_stack *stack_a)
         ra(stack_a);
 }
 
+t_node *create_node(int num, t_stack *stack_a, t_stack *stack_b)
+{
+	t_node *new_node;
+
+	new_node = (t_node *)malloc(sizeof(t_node));
+	if (!new_node)
+		exit_n_error("Error\n", stack_a, stack_b);
+	new_node->next = NULL;
+	new_node->prev = NULL;
+	new_node->num = num;
+	return (new_node);
+}
+
 int	main(int argc, char **argv)
 {
 	t_stack *stack_a;
 	t_stack *stack_b;
 
-	(void)argc;
 	stack_a = (t_stack *)malloc(sizeof(t_stack));
 	stack_b = (t_stack *)malloc(sizeof(t_stack));
 	if (!stack_a || !stack_b)
 		exit_n_error("Error\n", stack_a, stack_b);
-	parse_arguments(argv, stack_a, stack_b);
+	if (argc == 2)
+        parse_string(argv, stack_a, stack_b);
+    else if (argc > 2)
+        parse_arguments(argv, stack_a, stack_b);
     if (stack_a->size == 2)
         order_two_numbers(stack_a);
     else if (stack_a->size == 3)
@@ -109,33 +97,3 @@ int	main(int argc, char **argv)
     free_stack(stack_b);
     return (0);
 }
-
-
-//problema, no ordena la pila bien, mirar el caso para 4, y mirar para el caso que nos lo pasan como una string
-// vale el error creoo que esta en que no pusheamos de vuelta a A mirando si la hemos pusheado en la posicion correcta, en caso de que no sea asi 
-// rotamos hasta encontrar la pposicion correcta en la que puede ser pusheado
-// Cómo debería ser la vuelta con Turk
-/* 
-Mientras b no esté vacío:
-
-Para cada nodo en b, calculas su target en a (el más pequeño mayor que él, o el mínimo si no existe).
-
-Calculas costes (ra, rra, rb, rrb, rr, rrr) para alinear a y b.
-
-Escoges el nodo de b con menor coste.
-
-Haces las rotaciones necesarias.
-
-pa para insertarlo en a.
-
-Cuando b está vacío, haces tu final_sort (rotar a hasta que el mínimo esté arriba).
-
-⚠️ El error concreto en tu código
-
-Tu order_cheapest_node hace pb(a, b) (todavía en la fase de ida).
-
-Pero nunca haces el mismo cálculo al revés (nodo de b → target en a) en la vuelta.
-
-En main simplemente haces while (stack_b->size > 0) pa(...), lo cual ignora totalmente la lógica de posiciones.
-
- */

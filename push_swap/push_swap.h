@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:53:37 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/16 18:53:21 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/17 16:50:43 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,31 +44,8 @@ typedef struct s_cost
 	int     rra_rb;
 } t_cost;
 
-int get_safe_index(t_node *node, t_stack *stack);
-void order_three_numbers(t_stack *stack_a);
-void	parse_arguments(char **argv, t_stack *stack_a, t_stack *stack_b);
-void order_three_numbers(t_stack *stack_a);
-void free_stack(t_stack *stack);
-void exit_n_error(char *msg, t_stack *stack_a, t_stack *stack_b);
-int check_number(char *str, t_stack *stack);
-t_node *create_node(int num, t_stack *stack_a, t_stack *stack_b);
-void order_two_numbers(t_stack *stack_a);
-int get_node_index(t_node *node, t_stack *stack);
-t_node *get_smallest_node(t_stack *stack);
-t_node *get_biggest_node(t_stack *stack);
-t_node *get_closest_smaller_node(int num, t_stack *stack_b);
-void final_sort(t_stack *stack_a);
-t_node *get_target_node(t_node *node, t_stack *stack, char option);
-int	calculate_cost_b(t_node *node, t_stack *stack_a, t_stack *stack_b, t_cost *c);
-int	calculate_cost_a(t_node *node, t_stack *stack_a, t_stack *stack_b, t_cost *c);
-void order_cheapest_node_a(t_node *node, t_stack *a, t_stack *b);
-void main_loop_back(t_stack *a, t_stack *b);
-void a_up_b_up(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b);
-void a_down_b_down(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b);
-void a_up_b_down(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b);
-void a_down_b_up(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b);
-void order_cheapest_node(t_node *node, t_stack *a, t_stack *b);
-void main_loop(t_stack *a, t_stack *b);
+// rules
+
 void push(t_stack *stack_receive, t_stack *stack_send);
 void pa(t_stack *stack_a, t_stack *stack_b);
 void pb(t_stack *stack_a, t_stack *stack_b);
@@ -84,5 +61,53 @@ void swap_nodes(t_stack *stack);
 void	sa(t_stack *stack_a);
 void	sb(t_stack *stack_b);
 void	ss(t_stack *stack_a, t_stack *stack_b);
+
+// cost 
+
+t_node *get_closest_smaller_node(int num, t_stack *stack_b);
+t_node *get_closest_bigger_node(int num, t_stack *stack_a);
+t_node *get_target_node(t_node *node, t_stack *stack, char option);
+int	calculate_cost_b(t_node *node, t_stack *stack_a, t_stack *stack_b, t_cost *c);
+int	calculate_cost_a(t_node *node, t_stack *stack_a, t_stack *stack_b, t_cost *c);
+
+// cost utils
+
+int get_safe_index(t_node *node, t_stack *stack);
+int get_node_index(t_node *node, t_stack *stack);
+t_node *get_smallest_node(t_stack *stack);
+t_node *get_biggest_node(t_stack *stack);
+
+// main loop
+
+void order_cheapest_node_a(t_node *node, t_stack *a, t_stack *b);
+void main_loop_back(t_stack *a, t_stack *b);
+void order_cheapest_node(t_node *node, t_stack *a, t_stack *b);
+void main_loop(t_stack *a, t_stack *b);
+
+// main loop utils
+
+void a_up_b_up(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b);
+void a_down_b_down(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b);
+void a_up_b_down(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b);
+void a_down_b_up(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b);
+
+// parse
+
+void parse_string(char **argv, t_stack *stack_a, t_stack *stack_b);
+int check_number(char *str, t_stack *stack);
+void	parse_arguments(char **argv, t_stack *stack_a, t_stack *stack_b);
+void create_stack_a(char **nums, t_stack *stack_a, t_stack *stack_b);
+
+// utils
+
+void free_stack(t_stack *stack);
+void exit_n_error(char *msg, t_stack *stack_a, t_stack *stack_b);
+void final_sort(t_stack *stack_a);
+
+// push_swap
+
+void order_two_numbers(t_stack *stack_a);
+void order_three_numbers(t_stack *stack_a);
+t_node *create_node(int num, t_stack *stack_a, t_stack *stack_b);
 
 #endif

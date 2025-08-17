@@ -6,66 +6,13 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 18:54:47 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/16 18:55:15 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/17 16:30:54 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../push_swap.h"
 
-int get_node_index(t_node *node, t_stack *stack)
-{
-    int index;
-    t_node *i_node;
 
-    if (!node || !stack)
-        return (-1);
-    i_node = stack->first;
-    index = 0;
-    while (i_node)
-    {
-        if (i_node == node)
-            return index;
-        i_node = i_node->next;
-        index++;
-    }
-    return (-1);
-}
-
-t_node *get_smallest_node(t_stack *stack)
-{
-    t_node *smallest_node;
-    t_node *i_node;
-
-    if (!stack || stack->size == 0 || !stack->first)
-        return NULL;
-    smallest_node = stack->first;
-    i_node = stack->first->next;
-    while (i_node)
-    {
-        if (i_node->num < smallest_node->num)
-            smallest_node = i_node;
-        i_node = i_node->next;
-    }
-    return (smallest_node);
-}
-
-t_node *get_biggest_node(t_stack *stack)
-{
-    t_node *biggest_node;
-    t_node *i_node;
-
-    if (!stack || stack->size == 0 || !stack->first)
-        return NULL;
-    biggest_node = stack->first;
-    i_node = stack->first->next;
-    while (i_node)
-    {
-        if (i_node->num > biggest_node->num)
-            biggest_node = i_node;
-        i_node = i_node->next;
-    }
-    return (biggest_node);
-}
 
 t_node *get_closest_bigger_node(int num, t_stack *stack_a)
 {
@@ -111,25 +58,6 @@ t_node *get_closest_smaller_node(int num, t_stack *stack_b)
     return (closest_smaller);
 }
 
-void final_sort(t_stack *stack_a)
-{
-    t_node *min_node;
-    int idx;
-    
-    min_node = get_smallest_node(stack_a);
-    idx = get_node_index(min_node, stack_a);
-    if (idx <= stack_a->size / 2)
-    {
-        while (idx-- > 0)
-            ra(stack_a);
-    }
-    else
-    {
-        int steps = stack_a->size - idx;
-        while (steps-- > 0)
-            rra(stack_a);
-    }
-}
 
 t_node *get_target_node(t_node *node, t_stack *stack, char option)
 {

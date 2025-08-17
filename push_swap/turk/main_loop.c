@@ -6,79 +6,11 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/12 17:47:44 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/16 18:52:16 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/17 16:27:53 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../push_swap.h"
-
-void a_up_b_up(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b)
-{
-    while (a_idx > 0 && b_idx > 0)
-    {
-        rr(stack_a, stack_b);
-        a_idx--;
-        b_idx--;
-    }
-    while (a_idx > 0)
-    {
-        ra(stack_a);
-        a_idx--;
-    }
-    while (b_idx > 0)
-    {
-        rb(stack_b);
-        b_idx--;
-    }
-}
-
-void a_down_b_down(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b)
-{
-    while (a_idx > 0 && b_idx > 0)
-    {
-        rrr(stack_a, stack_b);
-        a_idx--;
-        b_idx--;
-    }
-    while (a_idx > 0)
-    {
-        rra(stack_a);
-        a_idx--;
-    }
-    while (b_idx > 0)
-    {
-        rrb(stack_b);
-        b_idx--;
-    }
-}
-
-void a_up_b_down(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b)
-{
-    while (a_idx > 0)
-    {
-        ra(stack_a);
-        a_idx--;
-    }
-    while (b_idx > 0)
-    {
-        rrb(stack_b);
-        b_idx--;
-    }
-}
-
-void a_down_b_up(int a_idx, int b_idx, t_stack *stack_a, t_stack *stack_b)
-{
-    while (a_idx > 0)
-    {
-        rra(stack_a);
-        a_idx--;
-    }
-    while (b_idx > 0)
-    {
-        rb(stack_b);
-        b_idx--;
-    }
-}
 
 void order_cheapest_node(t_node *node, t_stack *a, t_stack *b)
 {
@@ -126,7 +58,6 @@ void order_cheapest_node_a(t_node *node, t_stack *a, t_stack *b)
         a_down_b_up(a->size - a_idx, b_idx, a, b);
     pa(a, b);
 }
-
 
 void main_loop(t_stack *a, t_stack *b)
 {
