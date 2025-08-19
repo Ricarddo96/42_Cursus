@@ -6,13 +6,11 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/11 18:54:47 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/17 16:30:54 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/19 17:54:32 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../push_swap.h"
-
-
 
 t_node *get_closest_bigger_node(int num, t_stack *stack_a)
 {

@@ -1,11 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rotate_rules.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/19 17:46:42 by ridoming          #+#    #+#             */
+/*   Updated: 2025/08/19 17:50:01 by ridoming         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../push_swap.h"
 
-void rotate(t_stack *stack)
+void	rotate(t_stack *stack)
 {
-	t_node *first_node;
+	t_node	*first_node;
 
 	if (stack->size < 2)
-		return;
+		return ;
 	first_node = stack->first;
 	first_node->prev = stack->last;
 	stack->first = stack->first->next;
@@ -14,18 +26,20 @@ void rotate(t_stack *stack)
 	stack->last->next = first_node;
 	stack->last = first_node;
 }
-void ra(t_stack *stack_a)
+
+void	ra(t_stack *stack_a)
 {
 	rotate(stack_a);
 	write(1, "ra\n", 3);
 }
 
-void rb(t_stack *stack_b)
+void	rb(t_stack *stack_b)
 {
 	rotate(stack_b);
 	write(1, "rb\n", 3);
 }
-void rr(t_stack *stack_a, t_stack *stack_b)
+
+void	rr(t_stack *stack_a, t_stack *stack_b)
 {
 	rotate(stack_a);
 	rotate(stack_b);

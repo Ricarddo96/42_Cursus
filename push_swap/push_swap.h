@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:53:37 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/17 16:50:43 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/19 17:04:25 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include "./libft/libft.h"
 # include <stdlib.h> 
 # include <limits.h>
+# include <stdbool.h>
 
 
 typedef struct s_node
@@ -100,12 +101,15 @@ void create_stack_a(char **nums, t_stack *stack_a, t_stack *stack_b);
 
 // utils
 
+void	init_stacks(t_stack *stack_a, t_stack *stack_b);
 void free_stack(t_stack *stack);
 void exit_n_error(char *msg, t_stack *stack_a, t_stack *stack_b);
+int stack_sorted(t_stack *stack);
 void final_sort(t_stack *stack_a);
 
 // push_swap
 
+void turk_algorithm(t_stack *stack_a, t_stack *stack_b);
 void order_two_numbers(t_stack *stack_a);
 void order_three_numbers(t_stack *stack_a);
 t_node *create_node(int num, t_stack *stack_a, t_stack *stack_b);
