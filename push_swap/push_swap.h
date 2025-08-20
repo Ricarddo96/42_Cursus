@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 18:53:37 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/19 17:04:25 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/20 16:28:47 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@
 # include <stdlib.h> 
 # include <limits.h>
 # include <stdbool.h>
-
 
 typedef struct s_node
 {
