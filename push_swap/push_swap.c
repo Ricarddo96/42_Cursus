@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/08/04 19:11:42 by ridoming          #+#    #+#             */
-/*   Updated: 2025/08/19 17:33:15 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/08/23 19:38:04 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,12 +95,15 @@ int	main(int argc, char **argv)
 		parse_string(argv, stack_a, stack_b);
 	else if (argc > 2)
 		parse_arguments(argv, stack_a, stack_b);
-	if (stack_a->size == 2)
-		order_two_numbers(stack_a);
-	else if (stack_a->size == 3)
-		order_three_numbers(stack_a);
-	else if (stack_a->size > 3)
-		turk_algorithm(stack_a, stack_b);
+	if (!stack_sorted(stack_a))
+	{
+		if (stack_a->size == 2)
+			order_two_numbers(stack_a);
+		else if (stack_a->size == 3)
+			order_three_numbers(stack_a);
+		else if (stack_a->size > 3)
+			turk_algorithm(stack_a, stack_b);
+	}
 	free_stack(stack_a);
 	free_stack(stack_b);
 	return (0);
