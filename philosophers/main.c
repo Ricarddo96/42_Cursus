@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 12:25:35 by ridoming          #+#    #+#             */
-/*   Updated: 2025/10/21 14:44:39 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/10/22 15:38:02 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ long long ft_atoll(const char *nptr)
     return (signo * resultado);
 }
 
-// PARSER (borrar print_parser)
+// PARSER
 
 void print_usage(void)
 {
@@ -62,23 +62,6 @@ void print_usage(void)
     printf("\n**All numbers must be positive integers (greater than 0) ");
     printf("and fit within the range of a 'long'.**\n");
     printf("\n");
-}
-
-void print_parser(t_input_data input_data)
-{
-    printf("\n--- Parser Verification ---\n");
-    printf("Philosophers:\t\t\t%ld\n", input_data.num_philosophers);
-    printf("Time to Die (ms):\t\t%ld\n", input_data.time_to_die);
-    printf("Time to Eat (ms):\t\t%ld\n", input_data.time_to_eat);
-    printf("Time to Sleep (ms):\t\t%ld\n", input_data.time_to_sleep);
-
-    printf("Meals to Complete:\t\t");
-    if (input_data.num_times_to_eat > 0)
-        printf("%ld\n", input_data.num_times_to_eat);
-    else
-        printf("Infinite (Stop on Death)\n");
-
-    printf("---------------------------\n\n");
 }
 
 int check_valid_numbers(int argc, char **argv)
@@ -120,14 +103,126 @@ int parser(int argc, char **argv, t_input_data *input_data)
     return (1);
 }
 
-// el input data no va con malloc porque vamos a hacer que se almacene en el stack como una variable ya que para pasar su direccion lo podemos hacer como un puntero, ademas que su contenido no va a ser dinamico en tiempo de ejecucion
+// THREADS
+
+int assign_memory(t_phil_thr *phil_thr, t_input_data data)
+{
+    long i = 0;
+    
+    phil_thr->threads = malloc(data.num_philosophers * sizeof(pthread_t));
+    if (!phil_thr->threads)
+    return (0);
+    phil_thr->forks = malloc(data.num_philosophers * sizeof(pthread_mutex_t));
+    if (!phil_thr->forks)
+    return (free(phil_thr->threads), 0);
+    while (i < data.num_philosophers)
+    {
+        if (pthread_mutex_init(&phil_thr->forks[i], NULL))
+        break;
+        i++;
+    }
+    if (i < data.num_philosophers)
+    {
+        while (--i >= 0)
+        pthread_mutex_destroy(&phil_thr->forks[i]);
+        free(phil_thr->threads);
+        free(phil_thr->forks);
+        return (0);
+    }
+    return (1);
+}
+
+t_program_data join_structures(t_phil_thr *phil_thr, t_input_data data)
+{
+    t_program_data total_data;
+    
+    total_data.infrastructure = phil_thr;
+    total_data.input = data;
+    return (total_data);
+}
+
+int init_threads_memory(t_phil_thr **thr_d, t_program_data **p_data, t_input_data dt)
+{
+    *thr_d = malloc(sizeof(t_phil_thr));
+    if (!*thr_d)
+    return (0);
+    if (!assign_memory(*thr_d, dt))
+    return (free(*thr_d), 0);
+    *p_data = malloc(sizeof(t_program_data));
+    if (!*p_data)
+    {
+        free((*thr_d)->threads);
+        free((*thr_d)->forks);
+        free(*thr_d);
+        return (0);
+    }
+    **p_data = join_structures(*thr_d, dt);
+    return (1);
+}
+
+int run_threads(t_phil_thr *thr_d, t_program_data *p_data)
+{
+    long i;
+    
+    i = 0;
+    while (i < p_data->input.num_philosophers)
+    {
+        if (pthread_create(&thr_d->threads[i++], NULL, routine, p_data))
+        return (free(thr_d->threads), free(thr_d->forks), 0);
+    }
+    i = 0;
+    while (i < p_data->input.num_philosophers)
+    pthread_join(thr_d->threads[i++], NULL);
+    return (1);
+}
+
+void cleanup_threads(t_phil_thr *thr_d, t_program_data *p_data)
+{
+    long i = 0;
+    while (i < p_data->input.num_philosophers)
+    pthread_mutex_destroy(&thr_d->forks[i++]);
+    free(thr_d->threads);
+    free(thr_d->forks);
+    free(thr_d);
+    free(p_data);
+}
+
+// ROUTINE
+
+void *routine(void *data)
+{
+    t_program_data *p_data;
+
+    p_data = (t_program_data *)data;
+    
+    return (NULL);
+}
+
+// MAIN
+
+int create_philosophers(t_input_data data)
+{
+    t_phil_thr *thr_d;
+    t_program_data *p_data;
+    
+    if (!init_threads_memory(&thr_d, &p_data, data))
+        return (0);
+    if (!run_threads(thr_d, p_data))
+    {
+        cleanup_threads(thr_d, p_data);
+        return (0);
+    }
+    cleanup_threads(thr_d, p_data);
+    return (1);
+}
 
 int main(int argc, char **argv)
 {
     t_input_data input_data;
-
+    
     if (!parser(argc, argv, &input_data))
-        return (1);
-    print_parser(input_data);
-    return (0);
+    return (EXIT_FAILURE);
+    if (!create_philosophers(input_data))
+    return (EXIT_FAILURE);
+    return (EXIT_SUCCESS);
 }
