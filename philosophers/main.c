@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 12:25:35 by ridoming          #+#    #+#             */
-/*   Updated: 2025/10/22 15:38:02 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/10/22 18:50:02 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,24 @@ long long ft_atoll(const char *nptr)
         i++;
     }
     return (signo * resultado);
+}
+
+void cleanup_threads(t_infra *thr_d, t_program_data *p_data)
+{
+    free_infra(thr_d, p_data->input.num_philosophers);
+    free(p_data);
+}
+
+void free_infra(t_infra *infra, long num_philosophers)
+{
+    long i;
+
+    i = 0;
+    while (i < num_philosophers)
+        pthread_mutex_destroy(&infra->forks[i++]);
+    free(infra->threads);
+    free(infra->forks);
+    free(infra);
 }
 
 // PARSER
@@ -88,7 +106,7 @@ int check_valid_numbers(int argc, char **argv)
     return (1);
 }
 
-int parser(int argc, char **argv, t_input_data *input_data)
+int parser(int argc, char **argv, t_input *input_data)
 {
     if (!(argc == 5 || argc == 6))
         return (print_usage(), 0);
@@ -105,124 +123,103 @@ int parser(int argc, char **argv, t_input_data *input_data)
 
 // THREADS
 
-int assign_memory(t_phil_thr *phil_thr, t_input_data data)
+int assign_memory(t_infra *infra, t_input data)
 {
     long i = 0;
-    
-    phil_thr->threads = malloc(data.num_philosophers * sizeof(pthread_t));
-    if (!phil_thr->threads)
-    return (0);
-    phil_thr->forks = malloc(data.num_philosophers * sizeof(pthread_mutex_t));
-    if (!phil_thr->forks)
-    return (free(phil_thr->threads), 0);
+
+    infra->threads = malloc(data.num_philosophers * sizeof(pthread_t));
+    if (!infra->threads)
+        return (0);
+    infra->forks = malloc(data.num_philosophers * sizeof(pthread_mutex_t));
+    if (!infra->forks)
+        return (free(infra->threads), 0);
     while (i < data.num_philosophers)
     {
-        if (pthread_mutex_init(&phil_thr->forks[i], NULL))
-        break;
+        if (pthread_mutex_init(&infra->forks[i], NULL))
+            break;
         i++;
     }
     if (i < data.num_philosophers)
     {
-        while (--i >= 0)
-        pthread_mutex_destroy(&phil_thr->forks[i]);
-        free(phil_thr->threads);
-        free(phil_thr->forks);
+        free_infra(infra, i);
         return (0);
     }
     return (1);
 }
 
-t_program_data join_structures(t_phil_thr *phil_thr, t_input_data data)
+int join_structs(t_infra **infra, t_program_data **p_data, t_input input_data)
 {
-    t_program_data total_data;
-    
-    total_data.infrastructure = phil_thr;
-    total_data.input = data;
-    return (total_data);
-}
-
-int init_threads_memory(t_phil_thr **thr_d, t_program_data **p_data, t_input_data dt)
-{
-    *thr_d = malloc(sizeof(t_phil_thr));
-    if (!*thr_d)
-    return (0);
-    if (!assign_memory(*thr_d, dt))
-    return (free(*thr_d), 0);
+    *infra = malloc(sizeof(t_infra));
+    if (!*infra)
+        return (0);
+    if (!assign_memory(*infra, input_data))
+        return (free(*infra), 0);
     *p_data = malloc(sizeof(t_program_data));
     if (!*p_data)
     {
-        free((*thr_d)->threads);
-        free((*thr_d)->forks);
-        free(*thr_d);
+        free_infra(*infra, input_data.num_philosophers);
         return (0);
     }
-    **p_data = join_structures(*thr_d, dt);
+    (*p_data)->infrastructure = *infra;
+    (*p_data)->input = input_data;
     return (1);
 }
 
-int run_threads(t_phil_thr *thr_d, t_program_data *p_data)
+int run_threads(t_infra *infra, t_program_data *p_data)
 {
     long i;
-    
+
     i = 0;
     while (i < p_data->input.num_philosophers)
     {
-        if (pthread_create(&thr_d->threads[i++], NULL, routine, p_data))
-        return (free(thr_d->threads), free(thr_d->forks), 0);
+        if (pthread_create(&infra->threads[i++], NULL, routine, p_data))
+        {
+            free_infra(infra, p_data->input.num_philosophers);
+            return (0);
+        }
     }
     i = 0;
     while (i < p_data->input.num_philosophers)
-    pthread_join(thr_d->threads[i++], NULL);
+        pthread_join(infra->threads[i++], NULL);
     return (1);
-}
-
-void cleanup_threads(t_phil_thr *thr_d, t_program_data *p_data)
-{
-    long i = 0;
-    while (i < p_data->input.num_philosophers)
-    pthread_mutex_destroy(&thr_d->forks[i++]);
-    free(thr_d->threads);
-    free(thr_d->forks);
-    free(thr_d);
-    free(p_data);
 }
 
 // ROUTINE
 
-void *routine(void *data)
+void *routine(void *program_data)
 {
     t_program_data *p_data;
 
-    p_data = (t_program_data *)data;
-    
+    p_data = (t_program_data *)program_data;
+
     return (NULL);
 }
 
 // MAIN
 
-int create_philosophers(t_input_data data)
+int create_philosophers(t_input input_data)
 {
-    t_phil_thr *thr_d;
+    t_infra *infra;
     t_program_data *p_data;
-    
-    if (!init_threads_memory(&thr_d, &p_data, data))
+
+    if (!join_structs(&infra, &p_data, input_data))
         return (0);
-    if (!run_threads(thr_d, p_data))
+    if (!run_threads(infra, p_data))
     {
-        cleanup_threads(thr_d, p_data);
+        cleanup_threads(infra, p_data);
         return (0);
     }
-    cleanup_threads(thr_d, p_data);
+    cleanup_threads(infra, p_data);
     return (1);
 }
 
 int main(int argc, char **argv)
 {
-    t_input_data input_data;
-    
+    t_input input_data;
+
     if (!parser(argc, argv, &input_data))
-    return (EXIT_FAILURE);
+        return (EXIT_FAILURE);
     if (!create_philosophers(input_data))
-    return (EXIT_FAILURE);
+        return (EXIT_FAILURE);
     return (EXIT_SUCCESS);
 }
