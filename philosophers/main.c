@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 12:25:35 by ridoming          #+#    #+#             */
-/*   Updated: 2025/10/22 18:50:02 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/10/22 19:09:19 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,12 +40,6 @@ long long ft_atoll(const char *nptr)
     return (signo * resultado);
 }
 
-void cleanup_threads(t_infra *thr_d, t_program_data *p_data)
-{
-    free_infra(thr_d, p_data->input.num_philosophers);
-    free(p_data);
-}
-
 void free_infra(t_infra *infra, long num_philosophers)
 {
     long i;
@@ -57,6 +51,13 @@ void free_infra(t_infra *infra, long num_philosophers)
     free(infra->forks);
     free(infra);
 }
+
+void cleanup_threads(t_infra *thr_d, t_program_data *p_data)
+{
+    free_infra(thr_d, p_data->input.num_philosophers);
+    free(p_data);
+}
+
 
 // PARSER
 
@@ -191,7 +192,6 @@ void *routine(void *program_data)
     t_program_data *p_data;
 
     p_data = (t_program_data *)program_data;
-
     return (NULL);
 }
 
