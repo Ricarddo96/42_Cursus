@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 12:25:35 by ridoming          #+#    #+#             */
-/*   Updated: 2025/10/22 19:09:19 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/10/23 15:25:02 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,9 +55,21 @@ void free_infra(t_infra *infra, long num_philosophers)
 void cleanup_threads(t_infra *thr_d, t_program_data *p_data)
 {
     free_infra(thr_d, p_data->input.num_philosophers);
+    pthread_mutex_destroy(&p_data->write_mutex);
     free(p_data);
 }
 
+long long get_timestamp(struct timeval time_start)
+{
+    struct timeval current_time;
+    long long elapsed_ms;
+
+    if (gettimeofday(&current_time, NULL) == -1)
+        return (0);
+    elapsed_ms = (current_time.tv_sec - time_start.tv_sec) * 1000;
+    elapsed_ms += (current_time.tv_usec - time_start.tv_usec) / 1000;
+    return (elapsed_ms);
+}
 
 // PARSER
 
@@ -168,42 +180,87 @@ int join_structs(t_infra **infra, t_program_data **p_data, t_input input_data)
 
 int run_threads(t_infra *infra, t_program_data *p_data)
 {
+    t_philo *philo; // hay que refactorizar esta funcion y crear otra para inicializar cada filosofo y unir estructuras (lo del primer while)
     long i;
 
     i = 0;
+    philo = malloc(p_data->input.num_philosophers * sizeof(t_philo));
+    if (!philo)
+        return (0);
     while (i < p_data->input.num_philosophers)
     {
-        if (pthread_create(&infra->threads[i++], NULL, routine, p_data))
-        {
-            free_infra(infra, p_data->input.num_philosophers);
-            return (0);
-        }
+        philo[i].data = p_data;
+        philo[i].id = i + 1;
+        philo[i].left_fork = &infra->forks[i];
+        philo[i].right_fork = &infra->forks[(i + 1) % p_data->input.num_philosophers];
+        i++;
+    }
+    i = 0;
+    while (i < p_data->input.num_philosophers)
+    {
+        if (pthread_create(&infra->threads[i], NULL, routine, &philo[i]))
+            return (free_infra(infra, p_data->input.num_philosophers), free(philo), 0);
+        i++;
     }
     i = 0;
     while (i < p_data->input.num_philosophers)
         pthread_join(infra->threads[i++], NULL);
-    return (1);
+    return (free(philo), 1);
 }
 
 // ROUTINE
 
-void *routine(void *program_data)
+void *routine(void *philo_data)
 {
-    t_program_data *p_data;
+    t_philo *philo;
+    long i;
 
-    p_data = (t_program_data *)program_data;
+    philo = (t_philo *)philo_data;
+    i = 0;
+    pthread_mutex_lock(&philo->data->write_mutex);
+    printf("%lld %ld is thinking\n", get_timestamp(philo->data->start_time), philo->id);
+    pthread_mutex_unlock(&philo->data->write_mutex);
+    if (philo->data->input.num_times_to_eat > 0)
+    {
+        while (i < philo->data->input.num_times_to_eat)
+        {
+            pthread_mutex_lock(philo->left_fork);
+            pthread_mutex_lock(&philo->data->write_mutex);
+            printf("%lld %ld has taken left fork\n", get_timestamp(philo->data->start_time), philo->id);
+            pthread_mutex_unlock(&philo->data->write_mutex);
+
+            pthread_mutex_lock(philo->right_fork);
+            pthread_mutex_lock(&philo->data->write_mutex);
+            printf("%lld %ld has taken right fork\n", get_timestamp(philo->data->start_time), philo->id);
+            pthread_mutex_unlock(&philo->data->write_mutex);
+
+            pthread_mutex_lock(&philo->data->write_mutex);
+            printf("%lld %ld is eating\n", get_timestamp(philo->data->start_time), philo->id);
+            pthread_mutex_unlock(&philo->data->write_mutex);
+            usleep(philo->data->input.time_to_eat * 1000);
+            i++;
+            pthread_mutex_unlock(philo->left_fork);
+            pthread_mutex_unlock(philo->right_fork);
+        }
+    }
+    pthread_mutex_lock(&philo->data->write_mutex);
+    printf("%lld %ld is sleeping\n", get_timestamp(philo->data->start_time), philo->id);
+    pthread_mutex_unlock(&philo->data->write_mutex);
+    usleep(philo->data->input.time_to_sleep * 1000);
     return (NULL);
 }
 
 // MAIN
 
-int create_philosophers(t_input input_data)
+int create_philosophers(t_input input_data, struct timeval *start_time)
 {
     t_infra *infra;
     t_program_data *p_data;
-
+   
     if (!join_structs(&infra, &p_data, input_data))
         return (0);
+    p_data->start_time = *start_time;
+    pthread_mutex_init(&p_data->write_mutex, NULL);
     if (!run_threads(infra, p_data))
     {
         cleanup_threads(infra, p_data);
@@ -216,10 +273,13 @@ int create_philosophers(t_input input_data)
 int main(int argc, char **argv)
 {
     t_input input_data;
-
+    struct timeval start_time;
+    
     if (!parser(argc, argv, &input_data))
         return (EXIT_FAILURE);
-    if (!create_philosophers(input_data))
+    if (gettimeofday(&start_time, NULL) == -1)
+        return (EXIT_FAILURE);
+    if (!create_philosophers(input_data, &start_time))
         return (EXIT_FAILURE);
     return (EXIT_SUCCESS);
 }
