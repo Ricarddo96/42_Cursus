@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 12:07:18 by ridoming          #+#    #+#             */
-/*   Updated: 2025/10/23 15:21:01 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/10/23 18:57:01 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ typedef struct s_philo
     long id;
     pthread_mutex_t *left_fork;
     pthread_mutex_t *right_fork;
+    long long last_time_i_eat;
     t_program_data *data;
 } t_philo;
 
@@ -69,8 +70,13 @@ int parser(int argc, char **argv, t_input *input_data);
 int assign_memory(t_infra *infra, t_input data);
 int join_structs(t_infra **infra, t_program_data **p_data, t_input input_data);
 int run_threads(t_infra *infra, t_program_data *p_data);
+void init_philo(t_infra *infra, t_program_data *p_data, t_philo *philo);
 
 // ROUTINE
+
+void think(t_philo *philo);
+int eat(t_philo *philo);
+void go_to_sleep(t_philo *philo);
 void *routine(void *program_data);
 
 // MAIN

@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 12:25:35 by ridoming          #+#    #+#             */
-/*   Updated: 2025/10/23 15:25:02 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/10/23 18:56:38 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,15 +59,15 @@ void cleanup_threads(t_infra *thr_d, t_program_data *p_data)
     free(p_data);
 }
 
-long long get_timestamp(struct timeval time_start)
+long long get_timestamp(struct timeval start_time)
 {
     struct timeval current_time;
     long long elapsed_ms;
 
     if (gettimeofday(&current_time, NULL) == -1)
         return (0);
-    elapsed_ms = (current_time.tv_sec - time_start.tv_sec) * 1000;
-    elapsed_ms += (current_time.tv_usec - time_start.tv_usec) / 1000;
+    elapsed_ms = (current_time.tv_sec - start_time.tv_sec) * 1000;
+    elapsed_ms += (current_time.tv_usec - start_time.tv_usec) / 1000;
     return (elapsed_ms);
 }
 
@@ -178,24 +178,33 @@ int join_structs(t_infra **infra, t_program_data **p_data, t_input input_data)
     return (1);
 }
 
-int run_threads(t_infra *infra, t_program_data *p_data)
+void init_philo(t_infra *infra, t_program_data *p_data, t_philo *philo)
 {
-    t_philo *philo; // hay que refactorizar esta funcion y crear otra para inicializar cada filosofo y unir estructuras (lo del primer while)
     long i;
 
     i = 0;
-    philo = malloc(p_data->input.num_philosophers * sizeof(t_philo));
-    if (!philo)
-        return (0);
     while (i < p_data->input.num_philosophers)
     {
         philo[i].data = p_data;
         philo[i].id = i + 1;
         philo[i].left_fork = &infra->forks[i];
         philo[i].right_fork = &infra->forks[(i + 1) % p_data->input.num_philosophers];
+        philo[i].last_time_i_eat = 0;
         i++;
     }
+    return;
+}
+
+int run_threads(t_infra *infra, t_program_data *p_data)
+{
+    t_philo *philo;
+    long i;
+
     i = 0;
+    philo = malloc(p_data->input.num_philosophers * sizeof(t_philo));
+    if (!philo)
+        return (0);
+    init_philo(infra, p_data, philo);
     while (i < p_data->input.num_philosophers)
     {
         if (pthread_create(&infra->threads[i], NULL, routine, &philo[i]))
@@ -210,6 +219,53 @@ int run_threads(t_infra *infra, t_program_data *p_data)
 
 // ROUTINE
 
+void think(t_philo *philo)
+{
+    pthread_mutex_lock(&philo->data->write_mutex);
+    printf("%lld %ld is thinking\n",
+           get_timestamp(philo->data->start_time), philo->id);
+    pthread_mutex_unlock(&philo->data->write_mutex);
+    return;
+}
+
+int eat(t_philo *philo)
+{
+    pthread_mutex_lock(philo->left_fork);
+    pthread_mutex_lock(philo->right_fork);
+
+    pthread_mutex_lock(&philo->data->write_mutex);
+    if ((get_timestamp(philo->data->start_time) - philo->last_time_i_eat)
+        >= philo->data->input.time_to_die)
+    {
+        printf("%lld %ld is dead\n",
+            get_timestamp(philo->data->start_time), philo->id);
+        pthread_mutex_unlock(&philo->data->write_mutex);
+        pthread_mutex_unlock(philo->left_fork);
+        pthread_mutex_unlock(philo->right_fork);
+        return (0);
+    }
+    printf("%lld %ld is eating\n",
+        get_timestamp(philo->data->start_time), philo->id);
+    pthread_mutex_unlock(&philo->data->write_mutex);
+
+    usleep(philo->data->input.time_to_eat * 1000);
+    philo->last_time_i_eat = get_timestamp(philo->data->start_time);
+    pthread_mutex_unlock(philo->left_fork);
+    pthread_mutex_unlock(philo->right_fork);
+    return (1);
+}
+
+
+void go_to_sleep(t_philo *philo)
+{
+    pthread_mutex_lock(&philo->data->write_mutex);
+    printf("%lld %ld is sleeping\n",
+           get_timestamp(philo->data->start_time), philo->id);
+    pthread_mutex_unlock(&philo->data->write_mutex);
+    usleep(philo->data->input.time_to_sleep * 1000);
+    return;
+}
+
 void *routine(void *philo_data)
 {
     t_philo *philo;
@@ -217,36 +273,17 @@ void *routine(void *philo_data)
 
     philo = (t_philo *)philo_data;
     i = 0;
-    pthread_mutex_lock(&philo->data->write_mutex);
-    printf("%lld %ld is thinking\n", get_timestamp(philo->data->start_time), philo->id);
-    pthread_mutex_unlock(&philo->data->write_mutex);
+    think(philo);
     if (philo->data->input.num_times_to_eat > 0)
     {
         while (i < philo->data->input.num_times_to_eat)
         {
-            pthread_mutex_lock(philo->left_fork);
-            pthread_mutex_lock(&philo->data->write_mutex);
-            printf("%lld %ld has taken left fork\n", get_timestamp(philo->data->start_time), philo->id);
-            pthread_mutex_unlock(&philo->data->write_mutex);
-
-            pthread_mutex_lock(philo->right_fork);
-            pthread_mutex_lock(&philo->data->write_mutex);
-            printf("%lld %ld has taken right fork\n", get_timestamp(philo->data->start_time), philo->id);
-            pthread_mutex_unlock(&philo->data->write_mutex);
-
-            pthread_mutex_lock(&philo->data->write_mutex);
-            printf("%lld %ld is eating\n", get_timestamp(philo->data->start_time), philo->id);
-            pthread_mutex_unlock(&philo->data->write_mutex);
-            usleep(philo->data->input.time_to_eat * 1000);
+            // si eat devuelve 0, break y a la mierda
+            eat(philo);
             i++;
-            pthread_mutex_unlock(philo->left_fork);
-            pthread_mutex_unlock(philo->right_fork);
         }
     }
-    pthread_mutex_lock(&philo->data->write_mutex);
-    printf("%lld %ld is sleeping\n", get_timestamp(philo->data->start_time), philo->id);
-    pthread_mutex_unlock(&philo->data->write_mutex);
-    usleep(philo->data->input.time_to_sleep * 1000);
+    go_to_sleep(philo);
     return (NULL);
 }
 
@@ -256,7 +293,7 @@ int create_philosophers(t_input input_data, struct timeval *start_time)
 {
     t_infra *infra;
     t_program_data *p_data;
-   
+
     if (!join_structs(&infra, &p_data, input_data))
         return (0);
     p_data->start_time = *start_time;
@@ -274,7 +311,7 @@ int main(int argc, char **argv)
 {
     t_input input_data;
     struct timeval start_time;
-    
+
     if (!parser(argc, argv, &input_data))
         return (EXIT_FAILURE);
     if (gettimeofday(&start_time, NULL) == -1)
@@ -283,3 +320,5 @@ int main(int argc, char **argv)
         return (EXIT_FAILURE);
     return (EXIT_SUCCESS);
 }
+
+// TODO: cambiar 1s por 0s y en las condiciones poner ! para tener coherencia con lo de que 0 es success y 1 error
