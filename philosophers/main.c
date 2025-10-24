@@ -6,7 +6,7 @@
 /*   By: ridoming <ridoming@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 12:25:35 by ridoming          #+#    #+#             */
-/*   Updated: 2025/10/23 18:56:38 by ridoming         ###   ########.fr       */
+/*   Updated: 2025/10/23 19:07:51 by ridoming         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -254,7 +254,6 @@ int eat(t_philo *philo)
     pthread_mutex_unlock(philo->right_fork);
     return (1);
 }
-
 
 void go_to_sleep(t_philo *philo)
 {
