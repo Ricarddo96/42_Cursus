@@ -12,7 +12,11 @@ int main(int argc, char **argv)
 	while (1)
 	{
 		std::cout << "Enter one of these three comands: ADD, SEARCH, EXIT --> " << std::endl;
-		std::getline(std::cin, input);
+		if (!std::getline(std::cin, input)) 
+		{
+        	std::cout << std::endl;
+        	break;
+		}
 		if (input == "ADD")
 		{
 			phonebook.add();
